@@ -1,0 +1,10 @@
+ Ekran główny powinien wyświetlać listę piw Twojego ulubionego gatunku. Skorzystaj z Brewery DB API ( http://www.brewerydb.com/developers/docs ). 
+ Do wyświetlenia listy użyj RecyclerView. 
+ Jedna "komórka" listy powinna zawierać zdjęcie piwa, nazwę, przycisk dodaj do ulubionych (po kliknięciu tego przycisku, przycisk zmienia wygląd a piwo zostaje trwale zapisane jako ulubione, 
+ oczywiście możemy nacisnąć ten przycisk jeszcze raz i piwo zostanie usunięte z ulubionych). 
+ Po kliknięciu w daną komórkę, przechodzimy do drugiego okna w którym należy wyświetlić zdjęcie piwa oraz dodatkowe informacje. 
+ Nazwa piwa oraz przycisk dodaj do ulubionych powinna znaleźć się na toolbarze activity w odpowiednich miejscach. 
+ Do komunikacji sieciowej użyto biblioteki retrofit wersji 1.9. 
+ Listę piw po pobraniu należy zapisać w bazie danych by była dostępna offline. 
+ Użyj OrmLite'a jako bazy danych. Należy również skorzystać z następujących bibliotek: Android Annotations, Picasso, Gson, OkHttp. 
+ Min api 16, target 23.

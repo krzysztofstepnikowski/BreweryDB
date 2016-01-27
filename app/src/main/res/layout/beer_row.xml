@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:card="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    card:contentPadding="10dp"
+    card:cardUseCompatPadding="true"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+         >
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:id="@+id/imageViewBeer"
+            android:src="@drawable/ic_beer"
+           />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/nameBeerTextView"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Lech"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:textColor="@color/PrimaryText"
+            android:textStyle="bold"
+            android:layout_marginLeft="80dp"
+            android:layout_marginTop="10dp"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/addToFavouriteButton"
+            android:layout_below="@+id/nameBeerTextView"
+            android:layout_alignLeft="@+id/nameBeerTextView"
+            android:layout_alignStart="@+id/nameBeerTextView"
+            android:text="Dodaj do ulubionych"
+            android:textColor="#FFFFFF"
+            android:background="@color/colorPrimaryDark"
+            android:padding="5dp"/>
+
+
+
+
+    </RelativeLayout>
+
+
+</android.support.v7.widget.CardView>
