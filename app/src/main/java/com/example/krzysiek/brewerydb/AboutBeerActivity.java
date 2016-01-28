@@ -13,12 +13,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
 import com.example.krzysiek.brewerydb.models.Brewery;
 import com.example.krzysiek.brewerydb.models.Datum;
 import com.example.krzysiek.brewerydb.network.ApiInterface;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
 
@@ -32,8 +30,9 @@ public class AboutBeerActivity extends AppCompatActivity {
 
     private ImageView imageViewBeerDetails;
     private TextView nameBeerTextView;
+    private TextView descriptionBeerTextView;
     private Button addToFavouriteDetailsButton;
-    public static ArrayList<String> descriptionBeerList = new ArrayList<String>();
+    public static ArrayList<String> descriptionBeer = new ArrayList<String>();
     public static final String BASE_API_URL = "https://api.brewerydb.com/v2";
 
 
@@ -97,5 +96,6 @@ public class AboutBeerActivity extends AppCompatActivity {
     }
 
 
-
 }
+
+

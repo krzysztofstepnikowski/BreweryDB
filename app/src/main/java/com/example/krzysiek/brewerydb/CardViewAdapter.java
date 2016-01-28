@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,7 +25,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
     private List<String> dataSource;
 
-    public CardViewAdapter(HomeActivity homeActivity, List<String> dataSource){
+    public CardViewAdapter(Context context, List<String> dataSource){
         this.dataSource=dataSource;
     }
 
@@ -62,15 +61,11 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
                 final int status = (Integer) v.getTag();
 
-                if(status == 1)
-                {
+                if (status == 1) {
                     holder.addToFavouriteButton.setText("Usuń z ulubionych");
                     holder.addToFavouriteButton.setBackgroundResource(R.color.addToFavouriteButton);
                     v.setTag(0);
-                }
-
-                else
-                {
+                } else {
                     holder.addToFavouriteButton.setText("Dodaj do ulubionych");
                     holder.addToFavouriteButton.setBackgroundResource(R.color.colorPrimaryDark);
                     v.setTag(1);
@@ -79,6 +74,8 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
             }
         });
+
+
 
     }
 
@@ -109,8 +106,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
             imageViewBeer.buildDrawingCache();
             image = imageViewBeer.getDrawingCache();
         }
-
-
 
 
         @Override
