@@ -26,13 +26,12 @@ public class HomeActivity extends AppCompatActivity {
 
     private ArrayList<String> simpleBeerList = new ArrayList<String>();
     public static ArrayList<String> beerPhotoUrls = new ArrayList<>();
-
     public static final String BASE_API_URL = "https://api.brewerydb.com/v2";
 
     private RecyclerView mRecyclerView;
     private CardViewAdapter adapter2;
 
-    private ProgressDialog progress;
+    ProgressDialog progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,6 @@ public class HomeActivity extends AppCompatActivity {
 
         RestAdapter adapter = new RestAdapter.Builder().setEndpoint(BASE_API_URL)
                 .setLogLevel(retrofit.RestAdapter.LogLevel.FULL).build();
-
         ApiInterface breweryRestInterface = adapter.create(ApiInterface.class);
 
         breweryRestInterface.getBeerReport(new Callback<Brewery>() {
@@ -86,7 +84,7 @@ public class HomeActivity extends AppCompatActivity {
                             beerPhotoUrls.add(url);
 
                         }else{
-                            beerPhotoUrls.add("Pusty zawartość xD"); //pusty String
+                            beerPhotoUrls.add("emptystring xD");
                         }
 
 

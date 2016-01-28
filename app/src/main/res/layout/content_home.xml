@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.cloudduty.qstra.slawomirkustra.cloudduty.fragments.ActualCloudDutyFragment"
-    android:background="@color/BackgroundLayout"
+    android:background="#424242"
     android:layout_marginTop="50dp">
 
     <android.support.v7.widget.RecyclerView

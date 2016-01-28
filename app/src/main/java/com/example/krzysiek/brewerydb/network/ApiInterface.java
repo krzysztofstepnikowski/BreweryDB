@@ -11,6 +11,6 @@ import retrofit.http.GET;
 public interface ApiInterface {
     @GET("/search?q=zywiec&&hasImages=Y&type=beer&key=91f597f8c1b60ad0d7695849317d4d11&format=json")
 
-    void getBeerReport(Callback<Brewery> breweryCallback);
+    void getBeerReport(Callback<Brewery> callback);
 
 }

@@ -22,7 +22,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:id="@+id/imageViewBeer"
-            android:src="@drawable/ic_beer"
+            android:src="@drawable/ic_beenhere"
            />
 
         <TextView

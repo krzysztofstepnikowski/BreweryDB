@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -17,9 +16,8 @@ import java.util.List;
 
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.BreweryViewHolder> {
 
+
     private List<String> dataSource;
-
-
 
     public CardViewAdapter(HomeActivity homeActivity, List<String> dataSource){
         this.dataSource=dataSource;
@@ -39,13 +37,13 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
     public void onBindViewHolder(BreweryViewHolder holder, int position) {
 
         holder.nameBeerTextView.setText(dataSource.get(position).toString());
-        holder.imageViewBeer.setImageResource(R.drawable.ic_beer);
+        holder.imageViewBeer.setImageResource(R.drawable.icon_beer);
         String url = HomeActivity.beerPhotoUrls.get(position);
         Context context = holder.imageViewBeer.getContext();
         Picasso.with(context)
                 .load(url)
-                .placeholder(R.drawable.ic_beer)
-                .error(R.drawable.ic_beer)
+                .placeholder(R.drawable.icon_beer)
+                .error(R.drawable.icon_beer)
                 .into(holder.imageViewBeer);
 
         //holder.addToFavouriteButton.setVisibility(View.GONE);
