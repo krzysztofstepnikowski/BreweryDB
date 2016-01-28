@@ -6,12 +6,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
+
+
 
 
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.BreweryViewHolder> {
@@ -34,7 +37,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
     }
 
     @Override
-    public void onBindViewHolder(BreweryViewHolder holder, int position) {
+    public void onBindViewHolder(final BreweryViewHolder holder, int position) {
 
         holder.nameBeerTextView.setText(dataSource.get(position).toString());
         holder.imageViewBeer.setImageResource(R.drawable.icon_beer);
@@ -46,7 +49,33 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                 .error(R.drawable.icon_beer)
                 .into(holder.imageViewBeer);
 
-        //holder.addToFavouriteButton.setVisibility(View.GONE);
+        holder.addToFavouriteButton.setTag(1);
+
+
+        holder.addToFavouriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final int status = (Integer) v.getTag();
+
+                if(status == 1)
+                {
+                    holder.addToFavouriteButton.setText("Usuń z ulubionych");
+                    holder.addToFavouriteButton.setBackgroundResource(R.color.addToFavouriteButton);
+                    v.setTag(0);
+                }
+
+                else
+                {
+                    holder.addToFavouriteButton.setText("Dodaj do ulubionych");
+                    holder.addToFavouriteButton.setBackgroundResource(R.color.colorPrimaryDark);
+                    v.setTag(1);
+                }
+
+
+            }
+        });
+
     }
 
 
@@ -61,13 +90,13 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
     {
         private TextView nameBeerTextView;
         private ImageView imageViewBeer;
-        //private Button addToFavouriteButton;
+        private Button addToFavouriteButton;
 
         public BreweryViewHolder(View itemView) {
             super(itemView);
             nameBeerTextView = (TextView)itemView.findViewById(R.id.nameBeerTextView);
             imageViewBeer = (ImageView)itemView.findViewById(R.id.imageViewBeer);
-            //addToFavouriteButton = (Button)itemView.findViewById(R.id.addToFavouriteButton);
+            addToFavouriteButton = (Button)itemView.findViewById(R.id.addToFavouriteButton);
         }
     }
 }

@@ -5,4 +5,5 @@
     <color name="colorAccent">#FFC107</color>
     <color name="PrimaryText">#212121</color>
     <color name="SecondaryText">#727272</color>
+    <color name="addToFavouriteButton">#388E3C</color>
 </resources>

@@ -93,6 +93,8 @@ public class HomeActivity extends AppCompatActivity {
                         adapter2 = new CardViewAdapter(HomeActivity.this, simpleBeerList);
                         mRecyclerView.setAdapter(adapter2);
                         progress.hide();
+
+
                     }
                 }
             }
