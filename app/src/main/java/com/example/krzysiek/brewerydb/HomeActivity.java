@@ -9,7 +9,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 
 import com.example.krzysiek.brewerydb.models.Brewery;
 import com.example.krzysiek.brewerydb.models.Datum;
@@ -22,7 +25,7 @@ import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity     {
 
     private ArrayList<String> simpleBeerList = new ArrayList<String>();
     public static ArrayList<String> beerPhotoUrls = new ArrayList<>();
@@ -30,6 +33,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private CardViewAdapter adapter2;
+
+
 
     ProgressDialog progress;
 
@@ -83,8 +88,12 @@ public class HomeActivity extends AppCompatActivity {
                             String url = i.getLabels().getMedium().toString();
                             beerPhotoUrls.add(url);
 
-                        }else{
-                            beerPhotoUrls.add("emptystring xD");
+                        }
+
+
+
+                        else{
+                            beerPhotoUrls.add("Pusty zawartość zmiennej"); //pusty String
                         }
 
 
@@ -93,6 +102,7 @@ public class HomeActivity extends AppCompatActivity {
                         adapter2 = new CardViewAdapter(HomeActivity.this, simpleBeerList);
                         mRecyclerView.setAdapter(adapter2);
                         progress.hide();
+
 
 
                     }

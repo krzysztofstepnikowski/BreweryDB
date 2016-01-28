@@ -1,11 +1,15 @@
 package com.example.krzysiek.brewerydb;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -86,17 +90,41 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         return dataSource.size();
     }
 
-    public class BreweryViewHolder extends RecyclerView.ViewHolder
+    public class BreweryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
     {
         private TextView nameBeerTextView;
         private ImageView imageViewBeer;
         private Button addToFavouriteButton;
+        private Context context;
+        private Bitmap image;
 
         public BreweryViewHolder(View itemView) {
             super(itemView);
+            context = itemView.getContext();
+            itemView.setOnClickListener(this);
             nameBeerTextView = (TextView)itemView.findViewById(R.id.nameBeerTextView);
             imageViewBeer = (ImageView)itemView.findViewById(R.id.imageViewBeer);
             addToFavouriteButton = (Button)itemView.findViewById(R.id.addToFavouriteButton);
+
+            imageViewBeer.buildDrawingCache();
+            image = imageViewBeer.getDrawingCache();
+        }
+
+
+
+
+        @Override
+        public void onClick(View v) {
+
+            Bundle bundle  = new Bundle();
+
+
+            Intent intent = new Intent(context,AboutBeerActivity.class);
+            intent.putExtra("nameBeer",nameBeerTextView.getText().toString());
+            bundle.putParcelable("imageBeerBitMap", image);
+            intent.putExtras(bundle);
+            context.startActivity(intent);
+
         }
     }
 }
