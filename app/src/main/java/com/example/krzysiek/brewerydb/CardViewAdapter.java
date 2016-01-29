@@ -103,7 +103,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
             Intent intent = new Intent(context, AboutBeerActivity.class);
             intent.putExtra("imageBeer", HomeActivity.beerPhotoLargeUrlsList.get(getAdapterPosition()));
-            intent.putExtra("nameBeer", nameBeerTextView.getText().toString());
+            intent.putExtra("nameBeer", HomeActivity.simpleBeerList.get(getAdapterPosition()));
             intent.putExtra("abvBeer", HomeActivity.beerABVList.get(getAdapterPosition()));
             intent.putExtra("descriptionBeer", HomeActivity.beerDescriptionList.get(getAdapterPosition()));
             context.startActivity(intent);

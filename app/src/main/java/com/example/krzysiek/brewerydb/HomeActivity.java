@@ -2,14 +2,13 @@ package com.example.krzysiek.brewerydb;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
+
 
 
 import com.example.krzysiek.brewerydb.models.Brewery;
@@ -25,7 +24,7 @@ import retrofit.client.Response;
 
 public class HomeActivity extends AppCompatActivity {
 
-    private ArrayList<String> simpleBeerList = new ArrayList<String>();
+    public static ArrayList<String> simpleBeerList = new ArrayList<String>();
     public static ArrayList<String> beerPhotoMediumUrlsList = new ArrayList<String>();
     public static ArrayList<String> beerPhotoLargeUrlsList = new ArrayList<String>();
     public static ArrayList<String> beerABVList = new ArrayList<String>();
