@@ -36,6 +36,7 @@ public class AboutBeerActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         Bundle extras = getIntent().getExtras();
 
 
@@ -43,6 +44,9 @@ public class AboutBeerActivity extends AppCompatActivity {
         String nameBeer = extras.getString("nameBeer");
         String abvBeer = extras.getString("abvBeer");
         String descriptionBeer = extras.getString("descriptionBeer");
+
+
+        getSupportActionBar().setTitle(nameBeer);
 
         imageViewBeerDetails = (ImageView) findViewById(R.id.imageViewBeerDetails);
         Picasso.with(imageViewBeerDetails.getContext())
