@@ -1,6 +1,7 @@
 package com.example.krzysiek.brewerydb;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import com.example.krzysiek.brewerydb.models.Brewery;
 import com.example.krzysiek.brewerydb.models.Datum;
 import com.example.krzysiek.brewerydb.network.ApiInterface;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -37,6 +39,7 @@ public class AboutBeerActivity extends AppCompatActivity {
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,25 +47,25 @@ public class AboutBeerActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
 
         Bundle extras = getIntent().getExtras();
 
         String nameBeer = extras.getString("nameBeer");
-        Bitmap bmp = (Bitmap) extras.getParcelable("imageBeerBitMap");
 
-        imageViewBeerDetails = (ImageView) findViewById(R.id.imageViewBeerDetails);
-        imageViewBeerDetails.setImageBitmap(bmp);
+
+
+
+        imageViewBeerDetails = (ImageView)findViewById(R.id.imageViewBeerDetails);
+
 
         nameBeerTextView = (TextView) findViewById(R.id.nameBeerTextViewDeitals);
         nameBeerTextView.setText(nameBeer);
 
-        addToFavouriteDetailsButton = (Button) findViewById(R.id.addToFavouriteDetailsButton);
+        descriptionBeerTextView = (TextView)findViewById(R.id.descriptionBeerTextViewDeitals);
 
+
+        addToFavouriteDetailsButton = (Button) findViewById(R.id.addToFavouriteDetailsButton);
         addToFavouriteDetailsButton.setTag(1);
 
 

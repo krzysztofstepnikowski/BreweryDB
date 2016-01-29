@@ -2,8 +2,8 @@ package com.example.krzysiek.brewerydb;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,12 +18,12 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 
-
-
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.BreweryViewHolder> {
 
 
     private List<String> dataSource;
+    public String url;
+    public String abv;
 
     public CardViewAdapter(Context context, List<String> dataSource){
         this.dataSource=dataSource;
@@ -44,13 +44,14 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
         holder.nameBeerTextView.setText(dataSource.get(position).toString());
         holder.imageViewBeer.setImageResource(R.drawable.icon_beer);
-        String url = HomeActivity.beerPhotoUrls.get(position);
+        url = HomeActivity.beerPhotoUrls.get(position);
         Context context = holder.imageViewBeer.getContext();
         Picasso.with(context)
                 .load(url)
                 .placeholder(R.drawable.icon_beer)
                 .error(R.drawable.icon_beer)
                 .into(holder.imageViewBeer);
+
 
         holder.addToFavouriteButton.setTag(1);
 
@@ -75,8 +76,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
             }
         });
 
-
-
     }
 
 
@@ -93,7 +92,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         private ImageView imageViewBeer;
         private Button addToFavouriteButton;
         private Context context;
-        private Bitmap image;
 
         public BreweryViewHolder(View itemView) {
             super(itemView);
@@ -102,22 +100,14 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
             nameBeerTextView = (TextView)itemView.findViewById(R.id.nameBeerTextView);
             imageViewBeer = (ImageView)itemView.findViewById(R.id.imageViewBeer);
             addToFavouriteButton = (Button)itemView.findViewById(R.id.addToFavouriteButton);
-
-            imageViewBeer.buildDrawingCache();
-            image = imageViewBeer.getDrawingCache();
         }
-
 
         @Override
         public void onClick(View v) {
 
-            Bundle bundle  = new Bundle();
-
-
             Intent intent = new Intent(context,AboutBeerActivity.class);
-            intent.putExtra("nameBeer",nameBeerTextView.getText().toString());
-            bundle.putParcelable("imageBeerBitMap", image);
-            intent.putExtras(bundle);
+            intent.putExtra("nameBeer", nameBeerTextView.getText().toString());
+            intent.putExtra("abv",abv);
             context.startActivity(intent);
 
         }

@@ -27,6 +27,7 @@ public class HomeActivity extends AppCompatActivity     {
 
     private ArrayList<String> simpleBeerList = new ArrayList<String>();
     public static ArrayList<String> beerPhotoUrls = new ArrayList<>();
+
     public static final String BASE_API_URL = "https://api.brewerydb.com/v2";
 
     private RecyclerView mRecyclerView;
@@ -78,12 +79,11 @@ public class HomeActivity extends AppCompatActivity     {
 
                             String url = i.getLabels().getMedium().toString();
                             beerPhotoUrls.add(url);
-
                         }
 
 
                         else{
-                            beerPhotoUrls.add("Pusty zawartość zmiennej"); //pusty String
+                            beerPhotoUrls.add("Brak zdjęcia"); //pusty String
                         }
 
 
@@ -92,7 +92,6 @@ public class HomeActivity extends AppCompatActivity     {
                         adapter2 = new CardViewAdapter(HomeActivity.this, simpleBeerList);
                         mRecyclerView.setAdapter(adapter2);
                         progress.hide();
-
 
 
                     }
