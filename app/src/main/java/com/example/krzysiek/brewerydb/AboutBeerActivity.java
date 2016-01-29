@@ -1,12 +1,9 @@
 package com.example.krzysiek.brewerydb;
 
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.net.Uri;
+
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -14,30 +11,20 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
-import com.example.krzysiek.brewerydb.models.Brewery;
-import com.example.krzysiek.brewerydb.models.Datum;
-import com.example.krzysiek.brewerydb.network.ApiInterface;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+
+
 
 
 public class AboutBeerActivity extends AppCompatActivity {
 
     private ImageView imageViewBeerDetails;
-    private TextView nameBeerTextView;
-    private TextView descriptionBeerTextView;
+    private TextView nameBeerTextViewDetails;
+    private TextView abvBeerTextViewDetails;
+    private TextView descriptionBeerTextViewDetails;
     private Button addToFavouriteDetailsButton;
-    public static ArrayList<String> descriptionBeer = new ArrayList<String>();
-    public static final String BASE_API_URL = "https://api.brewerydb.com/v2";
-
-
 
 
     @Override
@@ -51,19 +38,33 @@ public class AboutBeerActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
 
+
+        String imageBeer = extras.getString("imageBeer");
         String nameBeer = extras.getString("nameBeer");
+        String abvBeer = extras.getString("abvBeer");
+        String descriptionBeer = extras.getString("descriptionBeer");
+
+        imageViewBeerDetails = (ImageView) findViewById(R.id.imageViewBeerDetails);
+        Picasso.with(imageViewBeerDetails.getContext())
+                .load(imageBeer)
+                .placeholder(R.drawable.icon_beer)
+                .error(R.drawable.icon_beer)
+                .into(imageViewBeerDetails);
 
 
+        nameBeerTextViewDetails = (TextView) findViewById(R.id.nameBeerTextViewDeitals);
+        nameBeerTextViewDetails.setText(nameBeer);
 
+        abvBeerTextViewDetails = (TextView) findViewById(R.id.abvBeerTextViewDeitals);
 
-        imageViewBeerDetails = (ImageView)findViewById(R.id.imageViewBeerDetails);
+        if (!abvBeer.equals("Brak danych")) {
+            abvBeerTextViewDetails.setText(abvBeer + "%");
+        } else {
+            abvBeerTextViewDetails.setText(abvBeer);
+        }
 
-
-        nameBeerTextView = (TextView) findViewById(R.id.nameBeerTextViewDeitals);
-        nameBeerTextView.setText(nameBeer);
-
-        descriptionBeerTextView = (TextView)findViewById(R.id.descriptionBeerTextViewDeitals);
-
+        descriptionBeerTextViewDetails = (TextView) findViewById(R.id.descriptionBeerDetailsTextView);
+        descriptionBeerTextViewDetails.setText(descriptionBeer);
 
         addToFavouriteDetailsButton = (Button) findViewById(R.id.addToFavouriteDetailsButton);
         addToFavouriteDetailsButton.setTag(1);
@@ -88,9 +89,7 @@ public class AboutBeerActivity extends AppCompatActivity {
             }
         });
 
-
     }
-
 
 }
 
