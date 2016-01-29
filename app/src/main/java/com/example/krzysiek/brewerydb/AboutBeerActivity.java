@@ -51,8 +51,6 @@ public class AboutBeerActivity extends AppCompatActivity {
         imageViewBeerDetails = (ImageView) findViewById(R.id.imageViewBeerDetails);
         Picasso.with(imageViewBeerDetails.getContext())
                 .load(imageBeer)
-                .placeholder(R.drawable.icon_beer)
-                .error(R.drawable.icon_beer)
                 .into(imageViewBeerDetails);
 
 

@@ -24,7 +24,7 @@ import retrofit.client.Response;
 
 public class HomeActivity extends AppCompatActivity {
 
-    public static ArrayList<String> simpleBeerList = new ArrayList<String>();
+    private ArrayList<String> simpleBeerList = new ArrayList<String>();
     public static ArrayList<String> beerPhotoMediumUrlsList = new ArrayList<String>();
     public static ArrayList<String> beerPhotoLargeUrlsList = new ArrayList<String>();
     public static ArrayList<String> beerABVList = new ArrayList<String>();
