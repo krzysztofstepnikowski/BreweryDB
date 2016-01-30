@@ -17,12 +17,11 @@ import android.view.MenuItem;
 import com.example.krzysiek.brewerydb.models.Brewery;
 import com.example.krzysiek.brewerydb.models.Datum;
 import com.example.krzysiek.brewerydb.network.ApiInterface;
-import com.example.krzysiek.brewerydb.ormlite.BreweryDb;
-import com.example.krzysiek.brewerydb.ormlite.DatabaseHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit.Callback;
@@ -38,6 +37,11 @@ public class HomeActivity extends AppCompatActivity {
     public static ArrayList<String> beerABVList = new ArrayList<String>();
     public static ArrayList<String> beerDescriptionList = new ArrayList<String>();
     public static final String BASE_API_URL = "https://api.brewerydb.com/v2";
+
+    public static final String FIRST_COLUMN="First";
+    public static final String SECOND_COLUMN="Second";
+    public static final String THIRD_COLUMN="Third";
+
 
     private RecyclerView mRecyclerView;
     private CardViewAdapter adapter2;
@@ -57,7 +61,6 @@ public class HomeActivity extends AppCompatActivity {
 
         fetchData();
 
-
     }
 
     public void fetchData() {
@@ -72,8 +75,31 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void success(Brewery breweries, Response response) {
 
-                for (Datum i : breweries.getData()) {
 
+
+                DatabaseHelper dbHelper;
+                dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplication(), DatabaseHelper.class);
+                final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
+                //////////////////////////////
+                int j =0;
+                for(Object obj : studDao.queryForAll()) {
+                    BeerDataBaseTemplate wdt = (BeerDataBaseTemplate) obj;
+                    Log.d("Imie piwa z bazy:", wdt.getBeerName().toString());
+                }
+
+                //Dodaj do bazy
+                for (Datum i : breweries.getData()) {
+                    if(i.getName()!=null&&i.getAbv()!=null){
+                        studDao.create(new BeerDataBaseTemplate(
+                                        "" + i.getName(),
+                                        i.getAbv(),
+                                        false)
+                        );
+                        List<BeerDataBaseTemplate> list2a = studDao.queryForAll();
+                        Log.d("baza: ", list2a.get(j).toString());
+                        j++;
+                    }
+                    //////////////////////////////
 
                     if (i.getName() != null) {
 
@@ -117,8 +143,16 @@ public class HomeActivity extends AppCompatActivity {
                         progress.hide();
 
 
+
+
                     }
                 }
+
+
+
+
+
+
             }
 
             @Override
@@ -140,10 +174,10 @@ public class HomeActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
-        if (id == R.id.favouriteBeersMenuItem) {
-            Intent intent = new Intent(this, FavouriteBeersActivity.class);
-            startActivity(intent);
-        }
+//        if (id == R.id.favouriteBeersMenuItem) {
+//            Intent intent = new Intent(this, FavouriteBeersActivity.class);
+//            startActivity(intent);
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -151,7 +185,7 @@ public class HomeActivity extends AppCompatActivity {
     public void createOrmLiteDB() {
         dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplicationContext(), DatabaseHelper.class);
         final RuntimeExceptionDao runtimeExceptionDao = dbHelper.getStudRuntimeExceptionDao();
-        List<BreweryDb> breweryDbList = runtimeExceptionDao.queryForAll();
+        List<BeerDataBaseTemplate> breweryDbList = runtimeExceptionDao.queryForAll();
 
         int breweryDbListSize = breweryDbList.size();
 
