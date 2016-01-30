@@ -53,7 +53,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                 .into(holder.imageViewBeer);
 
 
-
         holder.addToFavouriteButton.setTag(1);
         holder.addToFavouriteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +72,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
             }
         });
-
 
 
     }

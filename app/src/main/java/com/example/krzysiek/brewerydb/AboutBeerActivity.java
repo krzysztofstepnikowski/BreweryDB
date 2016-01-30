@@ -1,7 +1,6 @@
 package com.example.krzysiek.brewerydb;
 
 
-
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
@@ -12,10 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-
-
-
-
 
 
 public class AboutBeerActivity extends AppCompatActivity {
@@ -51,8 +46,6 @@ public class AboutBeerActivity extends AppCompatActivity {
         Picasso.with(imageViewBeerDetails.getContext())
                 .load(imageBeer)
                 .into(imageViewBeerDetails);
-
-
 
 
         abvBeerTextViewDetails = (TextView) findViewById(R.id.abvBeerTextViewDeitals);
