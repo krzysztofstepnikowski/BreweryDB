@@ -6,6 +6,8 @@
     <item android:id="@+id/favouriteBeersMenuItem"
         android:orderInCategory="100"
         android:title="Ulubione"
-        android:icon="@drawable/ic_star"
+        android:visible="true"
+        android:enabled="false"
+        app:actionLayout="@layout/show_protected"
         app:showAsAction="always" />
 </menu>

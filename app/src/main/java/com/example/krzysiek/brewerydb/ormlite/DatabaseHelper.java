@@ -11,46 +11,48 @@ import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 
 /**
- * Created by Krzysztof Stępnikowski on 2016-01-30.
+ * Created by SlawomirKustra on 30.01.2016.
  */
-public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
+public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
 
     private Context context;
-    private static final String DATABASE_NAME = "brewerydb";
+    private static final String DATABASE_NAME = "beerdb";
     private static final int DATABASE_VERSION = 1;
-    private RuntimeExceptionDao studRuntimeDAO = null;
 
+
+    private RuntimeExceptionDao studRuntimeDAO = null;
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
     }
 
     @Override
-    public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
-
+    public void onCreate(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource) {
         try {
-            TableUtils.createTable(connectionSource, BreweryDb.class);
-        } catch (SQLException e) {
+            TableUtils.createTable(connectionSource, BeerDataBaseTemplate.class);
+        } catch (SQLException e){
             e.printStackTrace();
         }
+
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i, int i2) {
         try {
-            TableUtils.dropTable(connectionSource, BreweryDb.class, true);
-            onCreate(database, connectionSource);
+            TableUtils.dropTable(connectionSource, BeerDataBaseTemplate.class, true);
+            onCreate(sqLiteDatabase,connectionSource);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
-    public RuntimeExceptionDao getStudRuntimeExceptionDao() {
-        if (studRuntimeDAO == null) {
-            studRuntimeDAO = getRuntimeExceptionDao(BreweryDb.class);
+    public RuntimeExceptionDao getStudRuntimeExceptionDao(){
+        if(studRuntimeDAO == null){
+            studRuntimeDAO = getRuntimeExceptionDao(BeerDataBaseTemplate.class);
         }
         return studRuntimeDAO;
 
     }
+
 }

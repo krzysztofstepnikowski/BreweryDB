@@ -1,4 +1,4 @@
-package com.example.krzysiek.brewerydb;
+package com.example.krzysiek.brewerydb.ormlite;
 
 import com.j256.ormlite.android.apptools.OrmLiteConfigUtil;
 

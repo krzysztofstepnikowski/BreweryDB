@@ -1,7 +1,6 @@
 package com.example.krzysiek.brewerydb;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
@@ -11,16 +10,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
 
 import com.example.krzysiek.brewerydb.models.Brewery;
 import com.example.krzysiek.brewerydb.models.Datum;
 import com.example.krzysiek.brewerydb.network.ApiInterface;
+import com.example.krzysiek.brewerydb.ormlite.BeerDataBaseTemplate;
+import com.example.krzysiek.brewerydb.ormlite.DatabaseHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import retrofit.Callback;
@@ -37,14 +39,12 @@ public class HomeActivity extends AppCompatActivity {
     public static ArrayList<String> beerDescriptionList = new ArrayList<String>();
     public static final String BASE_API_URL = "https://api.brewerydb.com/v2";
 
-    public static final String FIRST_COLUMN="First";
-    public static final String SECOND_COLUMN="Second";
-    public static final String THIRD_COLUMN="Third";
-
 
     private RecyclerView mRecyclerView;
     private CardViewAdapter adapter2;
     private ProgressDialog progress;
+    private ToggleButton mSwitchShowSecure;
+
 
     DatabaseHelper dbHelper;
 
@@ -75,20 +75,19 @@ public class HomeActivity extends AppCompatActivity {
             public void success(Brewery breweries, Response response) {
 
 
-
                 DatabaseHelper dbHelper;
                 dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplication(), DatabaseHelper.class);
                 final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
                 //////////////////////////////
-                int j =0;
-                for(Object obj : studDao.queryForAll()) {
+                int j = 0;
+                for (Object obj : studDao.queryForAll()) {
                     BeerDataBaseTemplate wdt = (BeerDataBaseTemplate) obj;
                     Log.d("Imie piwa z bazy:", wdt.getBeerName().toString());
                 }
 
                 //Dodaj do bazy
                 for (Datum i : breweries.getData()) {
-                    if(i.getName()!=null&&i.getAbv()!=null){
+                    if (i.getName() != null && i.getAbv() != null) {
                         studDao.create(new BeerDataBaseTemplate(
                                         "" + i.getName(),
                                         i.getAbv(),
@@ -142,14 +141,8 @@ public class HomeActivity extends AppCompatActivity {
                         progress.hide();
 
 
-
-
                     }
                 }
-
-
-
-
 
 
             }
@@ -165,6 +158,17 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
+
+        mSwitchShowSecure = (ToggleButton) menu.findItem(R.id.favouriteBeersMenuItem).getActionView().findViewById(R.id.switch_show_protected);
+        mSwitchShowSecure.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+            }
+        });
+
+
+
         return true;
     }
 
@@ -173,23 +177,9 @@ public class HomeActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
-//        if (id == R.id.favouriteBeersMenuItem) {
-//            Intent intent = new Intent(this, FavouriteBeersActivity.class);
-//            startActivity(intent);
-//        }
+
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void createOrmLiteDB() {
-        dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplicationContext(), DatabaseHelper.class);
-        final RuntimeExceptionDao runtimeExceptionDao = dbHelper.getStudRuntimeExceptionDao();
-        List<BeerDataBaseTemplate> breweryDbList = runtimeExceptionDao.queryForAll();
-
-        int breweryDbListSize = breweryDbList.size();
-
-        //List<BreweryDb> breweryDbList2 = runtimeExceptionDao.queryForEq("namedb", );
-
-
-    }
 }

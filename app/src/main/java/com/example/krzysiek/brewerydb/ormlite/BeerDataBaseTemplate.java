@@ -1,4 +1,4 @@
-package com.example.krzysiek.brewerydb;
+package com.example.krzysiek.brewerydb.ormlite;
 
 import com.j256.ormlite.field.DatabaseField;
 
@@ -17,6 +17,7 @@ public class BeerDataBaseTemplate {
     private String beerVoltage;
     @DatabaseField
     private boolean beerFav;
+
     public BeerDataBaseTemplate(int id, String beerName, String beerVoltage, boolean beerFav) {
         this.id = id;
         this.beerName = beerName;
@@ -32,7 +33,6 @@ public class BeerDataBaseTemplate {
 
     public BeerDataBaseTemplate() {
     }
-
 
 
     public String getBeerName() {
@@ -58,15 +58,6 @@ public class BeerDataBaseTemplate {
     public void setBeerFav(boolean beerFav) {
         this.beerFav = beerFav;
     }
-
-
-
-
-
-
-
-
-
 
 
 }
