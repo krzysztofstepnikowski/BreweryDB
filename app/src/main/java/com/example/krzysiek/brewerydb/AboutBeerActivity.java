@@ -21,7 +21,6 @@ import com.squareup.picasso.Picasso;
 public class AboutBeerActivity extends AppCompatActivity {
 
     private ImageView imageViewBeerDetails;
-    private TextView nameBeerTextViewDetails;
     private TextView abvBeerTextViewDetails;
     private TextView descriptionBeerTextViewDetails;
     private Button addToFavouriteDetailsButton;
@@ -54,8 +53,7 @@ public class AboutBeerActivity extends AppCompatActivity {
                 .into(imageViewBeerDetails);
 
 
-        nameBeerTextViewDetails = (TextView) findViewById(R.id.nameBeerTextViewDeitals);
-        nameBeerTextViewDetails.setText(nameBeer);
+
 
         abvBeerTextViewDetails = (TextView) findViewById(R.id.abvBeerTextViewDeitals);
 
