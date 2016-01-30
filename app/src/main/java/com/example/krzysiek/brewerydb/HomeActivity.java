@@ -168,7 +168,6 @@ public class HomeActivity extends AppCompatActivity {
         });
 
 
-
         return true;
     }
 
@@ -176,7 +175,6 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-
 
 
         return super.onOptionsItemSelected(item);
