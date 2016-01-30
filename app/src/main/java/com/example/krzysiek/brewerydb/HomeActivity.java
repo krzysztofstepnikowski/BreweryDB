@@ -17,8 +17,13 @@ import android.view.MenuItem;
 import com.example.krzysiek.brewerydb.models.Brewery;
 import com.example.krzysiek.brewerydb.models.Datum;
 import com.example.krzysiek.brewerydb.network.ApiInterface;
+import com.example.krzysiek.brewerydb.ormlite.BreweryDb;
+import com.example.krzysiek.brewerydb.ormlite.DatabaseHelper;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -38,6 +43,8 @@ public class HomeActivity extends AppCompatActivity {
     private CardViewAdapter adapter2;
     private ProgressDialog progress;
 
+    DatabaseHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +56,8 @@ public class HomeActivity extends AppCompatActivity {
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
 
         fetchData();
+
+
     }
 
     public void fetchData() {
@@ -122,7 +131,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home,menu);
+        getMenuInflater().inflate(R.menu.menu_home, menu);
         return true;
     }
 
@@ -131,12 +140,23 @@ public class HomeActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
-        if(id == R.id.favouriteBeersMenuItem)
-        {
-            Intent intent = new Intent(this,FavouriteBeersActivity.class);
+        if (id == R.id.favouriteBeersMenuItem) {
+            Intent intent = new Intent(this, FavouriteBeersActivity.class);
             startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void createOrmLiteDB() {
+        dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplicationContext(), DatabaseHelper.class);
+        final RuntimeExceptionDao runtimeExceptionDao = dbHelper.getStudRuntimeExceptionDao();
+        List<BreweryDb> breweryDbList = runtimeExceptionDao.queryForAll();
+
+        int breweryDbListSize = breweryDbList.size();
+
+        //List<BreweryDb> breweryDbList2 = runtimeExceptionDao.queryForEq("namedb", );
+
+
     }
 }
