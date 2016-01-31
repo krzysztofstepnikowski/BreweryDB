@@ -2,24 +2,31 @@ package com.example.krzysiek.brewerydb;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.squareup.picasso.Picasso;
 
+
 import java.util.List;
+
 
 
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.BreweryViewHolder> {
 
 
     private List<String> dataSource;
+    private static final String PREFERENCES_NAME = "favouriteBeers";
+    SharedPreferences sharedPreferences;
 
 
     public CardViewAdapter(Context context, List<String> dataSource) {
@@ -31,13 +38,14 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.beer_row, parent, false);
 
+
         BreweryViewHolder breweryViewHolder = new BreweryViewHolder(view);
 
         return breweryViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(final BreweryViewHolder holder, int position) {
+    public void onBindViewHolder(final BreweryViewHolder holder, final int position) {
 
         holder.nameBeerTextView.setText(dataSource.get(position).toString());
         holder.imageViewBeer.setImageResource(R.drawable.icon_beer);
@@ -45,7 +53,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         String urlLarge = HomeActivity.beerPhotoLargeUrlsList.get(position);
         String abv = HomeActivity.beerABVList.get(position);
         String description = HomeActivity.beerDescriptionList.get(position);
-        Context context = holder.imageViewBeer.getContext();
+        final Context context = holder.imageViewBeer.getContext();
         Picasso.with(context)
                 .load(urlMedium)
                 .placeholder(R.drawable.icon_beer)
@@ -53,23 +61,22 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                 .into(holder.imageViewBeer);
 
 
-        holder.addToFavouriteButton.setTag(1);
-        holder.addToFavouriteButton.setOnClickListener(new View.OnClickListener() {
+        holder.mCardView.setTag(position);
+
+
+        holder.addToFavouriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                final int status = (Integer) v.getTag();
-
-                if (status == 1) {
-                    holder.addToFavouriteButton.setText("Usuń z ulubionych");
-                    holder.addToFavouriteButton.setBackgroundResource(R.color.addToFavouriteButton);
-                    v.setTag(0);
-                } else {
-                    holder.addToFavouriteButton.setText("Dodaj do ulubionych");
-                    holder.addToFavouriteButton.setBackgroundResource(R.color.colorPrimaryDark);
-                    v.setTag(1);
+                if(buttonView.isChecked())
+                {
+                    buttonView.setBackgroundResource(R.color.addToFavouriteButton);
                 }
 
+                else {
+
+                    buttonView.setBackgroundResource(R.color.colorPrimaryDark);
+                }
             }
         });
 
@@ -86,16 +93,18 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
     public class BreweryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView nameBeerTextView;
         private ImageView imageViewBeer;
-        private Button addToFavouriteButton;
+        private ToggleButton addToFavouriteButton;
         private Context context;
+        public CardView mCardView;
 
         public BreweryViewHolder(View itemView) {
             super(itemView);
             context = itemView.getContext();
+            mCardView = (CardView) itemView.findViewById(R.id.cardView);
             itemView.setOnClickListener(this);
             nameBeerTextView = (TextView) itemView.findViewById(R.id.nameBeerTextView);
             imageViewBeer = (ImageView) itemView.findViewById(R.id.imageViewBeer);
-            addToFavouriteButton = (Button) itemView.findViewById(R.id.addToFavouriteButton);
+            addToFavouriteButton = (ToggleButton) itemView.findViewById(R.id.addToFavouriteButton);
         }
 
         @Override
@@ -108,6 +117,11 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
             intent.putExtra("descriptionBeer", HomeActivity.beerDescriptionList.get(getAdapterPosition()));
             context.startActivity(intent);
 
+
         }
+
+
+
+
     }
 }

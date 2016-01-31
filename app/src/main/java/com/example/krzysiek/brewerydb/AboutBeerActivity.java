@@ -8,7 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,7 +21,7 @@ public class AboutBeerActivity extends AppCompatActivity {
     private ImageView imageViewBeerDetails;
     private TextView abvBeerTextViewDetails;
     private TextView descriptionBeerTextViewDetails;
-    private Button addToFavouriteDetailsButton;
+    private ToggleButton addToFavouriteDetailsButton;
 
     private ToggleButton mSwitchShowSecure;
 
@@ -65,7 +64,7 @@ public class AboutBeerActivity extends AppCompatActivity {
         descriptionBeerTextViewDetails = (TextView) findViewById(R.id.descriptionBeerDetailsTextView);
         descriptionBeerTextViewDetails.setText(descriptionBeer);
 
-        addToFavouriteDetailsButton = (Button) findViewById(R.id.addToFavouriteDetailsButton);
+        addToFavouriteDetailsButton = (ToggleButton) findViewById(R.id.addToFavouriteDetailsButton);
         addToFavouriteDetailsButton.setTag(1);
 
 

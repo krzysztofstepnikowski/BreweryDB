@@ -81,12 +81,13 @@
         android:id="@+id/descriptionBeerDetailsTextView"/>
 
 
-    <Button
+    <ToggleButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:id="@+id/addToFavouriteDetailsButton"
-        android:text="Dodaj do ulubionych"
+        android:textOff="Dodaj do ulubionych"
+        android:textOn="Usuń z ulubionych"
         android:textColor="#FFFFFF"
         android:background="@color/colorPrimaryDark"
         android:padding="5dp"

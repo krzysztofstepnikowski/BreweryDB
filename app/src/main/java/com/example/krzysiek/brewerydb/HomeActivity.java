@@ -1,6 +1,7 @@
 package com.example.krzysiek.brewerydb;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
 import android.widget.CompoundButton;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 
@@ -74,7 +77,6 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void success(Brewery breweries, Response response) {
 
-
                 DatabaseHelper dbHelper;
                 dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplication(), DatabaseHelper.class);
                 final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
@@ -84,6 +86,7 @@ public class HomeActivity extends AppCompatActivity {
                     BeerDataBaseTemplate wdt = (BeerDataBaseTemplate) obj;
                     Log.d("Imie piwa z bazy:", wdt.getBeerName().toString());
                 }
+
 
                 //Dodaj do bazy
                 for (Datum i : breweries.getData()) {
@@ -140,10 +143,8 @@ public class HomeActivity extends AppCompatActivity {
                         mRecyclerView.setAdapter(adapter2);
                         progress.hide();
 
-
                     }
                 }
-
 
             }
 
@@ -163,6 +164,13 @@ public class HomeActivity extends AppCompatActivity {
         mSwitchShowSecure.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (mSwitchShowSecure.isChecked()) {
+                    SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+                    int position = sharedPreferences.getInt("itemObject", 0);
+
+                    Toast.makeText(getApplicationContext(), "Position: " + position, Toast.LENGTH_LONG).show();
+                }
 
             }
         });
