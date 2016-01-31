@@ -1,7 +1,6 @@
 package com.example.krzysiek.brewerydb;
 
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import android.widget.CompoundButton;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 
@@ -165,12 +163,6 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if (mSwitchShowSecure.isChecked()) {
-                    SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
-                    int position = sharedPreferences.getInt("itemObject", 0);
-
-                    Toast.makeText(getApplicationContext(), "Position: " + position, Toast.LENGTH_LONG).show();
-                }
 
             }
         });

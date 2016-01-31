@@ -7,10 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.squareup.picasso.Picasso;
@@ -65,24 +65,19 @@ public class AboutBeerActivity extends AppCompatActivity {
         descriptionBeerTextViewDetails.setText(descriptionBeer);
 
         addToFavouriteDetailsButton = (ToggleButton) findViewById(R.id.addToFavouriteDetailsButton);
-        addToFavouriteDetailsButton.setTag(1);
-
-
-        addToFavouriteDetailsButton.setOnClickListener(new View.OnClickListener() {
+        addToFavouriteDetailsButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(buttonView.isChecked())
+                {
+                    Toast.makeText(getApplicationContext(), "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
+                    buttonView.setBackgroundResource(R.color.addToFavouriteButton);
 
-                final int status = (Integer) v.getTag();
+                }
 
-                if (status == 1) {
+                else {
 
-                    addToFavouriteDetailsButton.setText("Usuń z ulubionych");
-                    addToFavouriteDetailsButton.setBackgroundResource(R.color.addToFavouriteButton);
-                    v.setTag(0);
-                } else {
-                    addToFavouriteDetailsButton.setText("Dodaj do ulubionych");
-                    addToFavouriteDetailsButton.setBackgroundResource(R.color.colorPrimaryDark);
-                    v.setTag(1);
+                    buttonView.setBackgroundResource(R.color.colorPrimaryDark);
                 }
             }
         });

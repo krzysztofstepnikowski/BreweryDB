@@ -2,7 +2,6 @@ package com.example.krzysiek.brewerydb;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,26 +11,31 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.krzysiek.brewerydb.utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
 
+import java.util.ArrayList;
 import java.util.List;
-
 
 
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.BreweryViewHolder> {
 
 
     private List<String> dataSource;
-    private static final String PREFERENCES_NAME = "favouriteBeers";
-    SharedPreferences sharedPreferences;
+    private Context context;
+
+    SharedPreference sharedPreference;
 
 
-    public CardViewAdapter(Context context, List<String> dataSource) {
+    public CardViewAdapter(Context context, ArrayList<String> dataSource) {
+        this.context = context;
         this.dataSource = dataSource;
     }
+
 
     @Override
     public BreweryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -62,20 +66,24 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
 
         holder.mCardView.setTag(position);
+        sharedPreference = new SharedPreference();
 
 
         holder.addToFavouriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if(buttonView.isChecked())
-                {
-                    buttonView.setBackgroundResource(R.color.addToFavouriteButton);
-                }
+                if (buttonView.isChecked()) {
 
-                else {
+                    Toast.makeText(context, "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
+                    buttonView.setBackgroundResource(R.color.addToFavouriteButton);
+
+
+                } else {
+
 
                     buttonView.setBackgroundResource(R.color.colorPrimaryDark);
+
                 }
             }
         });
@@ -107,6 +115,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
             addToFavouriteButton = (ToggleButton) itemView.findViewById(R.id.addToFavouriteButton);
         }
 
+
         @Override
         public void onClick(View v) {
 
@@ -119,8 +128,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
 
         }
-
-
 
 
     }
