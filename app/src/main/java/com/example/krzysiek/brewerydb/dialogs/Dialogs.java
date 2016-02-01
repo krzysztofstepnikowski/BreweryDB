@@ -40,7 +40,6 @@ public class Dialogs extends Dialog implements Validator.ValidationListener {
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -49,8 +48,6 @@ public class Dialogs extends Dialog implements Validator.ValidationListener {
         getWindow().setTitle("Wyszukaj piwo");
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-
-
 
         searchBeerEditText = (EditText) findViewById(R.id.searchBeerEditText);
         searchButton = (Button) findViewById(R.id.searchButton);
@@ -69,8 +66,6 @@ public class Dialogs extends Dialog implements Validator.ValidationListener {
 
                 String searchBeers = searchBeerEditText.getText().toString();
                 HomeActivity.searchBeer(searchBeers);
-
-
             }
 
             @Override

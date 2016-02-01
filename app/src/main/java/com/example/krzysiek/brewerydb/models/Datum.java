@@ -1,6 +1,7 @@
 package com.example.krzysiek.brewerydb.models;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -25,6 +26,10 @@ public class Datum {
     private Available available;
     private String description;
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+    public Datum(List<String> dataSource) {
+
+    }
 
     /**
      *

@@ -69,7 +69,7 @@ public class SharedPreference {
         saveFavourites(context, favorites);
     }
 
-    public void removeFavorite(Context context, Datum beerCardViewItem) {
+    public void removeFavorite(Context context, String beerCardViewItem) {
         ArrayList<Datum> favorites = loadFavorites(context);
 
         if (favorites != null) {

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.krzysiek.brewerydb.models.Datum;
 import com.example.krzysiek.brewerydb.utils.SharedPreference;
 import com.squareup.picasso.Picasso;
 
@@ -26,6 +27,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
 
     private List<String> dataSource;
+    private List<Datum> favoriteBeerList;
     private Context context;
 
     SharedPreference sharedPreference;
@@ -74,13 +76,11 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                 if (buttonView.isChecked()) {
-
-                    Toast.makeText(context, "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
                     buttonView.setBackgroundResource(R.color.addToFavouriteButton);
+                    Toast.makeText(context,"Dodano do ulubionych",Toast.LENGTH_SHORT).show();
 
 
                 } else {
-
 
                     buttonView.setBackgroundResource(R.color.colorPrimaryDark);
 
