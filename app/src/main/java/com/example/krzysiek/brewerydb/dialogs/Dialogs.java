@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -45,8 +46,10 @@ public class Dialogs extends Dialog implements Validator.ValidationListener {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_box);
-        getWindow().setLayout(android.view.ViewGroup.LayoutParams.FILL_PARENT,
-                android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+        getWindow().setTitle("Wyszukaj piwo");
+        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+
 
 
         searchBeerEditText = (EditText) findViewById(R.id.searchBeerEditText);
