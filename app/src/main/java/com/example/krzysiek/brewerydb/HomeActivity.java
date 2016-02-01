@@ -1,8 +1,11 @@
 package com.example.krzysiek.brewerydb;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import android.preference.DialogPreference;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,10 +14,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 
+import com.example.krzysiek.brewerydb.dialogs.Dialogs;
 import com.example.krzysiek.brewerydb.models.Brewery;
 import com.example.krzysiek.brewerydb.models.Datum;
 import com.example.krzysiek.brewerydb.network.ApiInterface;
@@ -176,8 +183,21 @@ public class HomeActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
+        if (id == R.id.searchBeerMenuItem) {
+
+            Dialogs dialogs = new Dialogs(this);
+            dialogs.show();
+
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
-}
+    public static void searchBeer(String text) {
+
+    }
+
+    }
+
+
+

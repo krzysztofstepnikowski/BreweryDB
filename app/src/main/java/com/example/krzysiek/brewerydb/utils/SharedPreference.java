@@ -57,23 +57,23 @@ public class SharedPreference {
         return (ArrayList<Datum>) favorites;
     }
 
-    public void addFavourite(Context context, Datum datum) {
+    public void addFavourite(Context context, Datum beerCardViewItem) {
         ArrayList<Datum> favorites = loadFavorites(context);
 
         if (favorites == null) {
             favorites = new ArrayList<Datum>();
         }
 
-        favorites.add(datum);
+        favorites.add(beerCardViewItem);
 
         saveFavourites(context, favorites);
     }
 
-    public void removeFavorite(Context context, Datum datum) {
+    public void removeFavorite(Context context, Datum beerCardViewItem) {
         ArrayList<Datum> favorites = loadFavorites(context);
 
         if (favorites != null) {
-            favorites.remove(datum);
+            favorites.remove(beerCardViewItem);
             saveFavourites(context, favorites);
         }
     }

@@ -13,7 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.krzysiek.brewerydb.dialogs.Dialogs;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 
 public class AboutBeerActivity extends AppCompatActivity {
@@ -68,14 +73,11 @@ public class AboutBeerActivity extends AppCompatActivity {
         addToFavouriteDetailsButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(buttonView.isChecked())
-                {
+                if (buttonView.isChecked()) {
                     Toast.makeText(getApplicationContext(), "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
                     buttonView.setBackgroundResource(R.color.addToFavouriteButton);
 
-                }
-
-                else {
+                } else {
 
                     buttonView.setBackgroundResource(R.color.colorPrimaryDark);
                 }
@@ -97,7 +99,6 @@ public class AboutBeerActivity extends AppCompatActivity {
         });
 
 
-
         return true;
     }
 
@@ -106,6 +107,12 @@ public class AboutBeerActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
+        if (id == R.id.searchBeerMenuItem) {
+
+            Dialogs dialogs = new Dialogs(this);
+            dialogs.show();
+
+        }
 
 
         return super.onOptionsItemSelected(item);

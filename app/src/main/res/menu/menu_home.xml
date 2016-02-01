@@ -10,4 +10,10 @@
         android:enabled="false"
         app:actionLayout="@layout/show_protected"
         app:showAsAction="always" />
+
+    <item android:id="@+id/searchBeerMenuItem"
+        android:title="Szukaj"
+        android:visible="true"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="always"/>
 </menu>
