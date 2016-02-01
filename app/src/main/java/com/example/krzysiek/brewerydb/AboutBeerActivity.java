@@ -1,24 +1,28 @@
 package com.example.krzysiek.brewerydb;
 
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.example.krzysiek.brewerydb.dialogs.Dialogs;
-import com.mobsandgeeks.saripaar.ValidationError;
-import com.mobsandgeeks.saripaar.Validator;
+
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+
 
 
 public class AboutBeerActivity extends AppCompatActivity {
@@ -29,6 +33,8 @@ public class AboutBeerActivity extends AppCompatActivity {
     private ToggleButton addToFavouriteDetailsButton;
 
     private ToggleButton mSwitchShowSecure;
+
+    final Context context = this;
 
 
     @Override
@@ -88,7 +94,7 @@ public class AboutBeerActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
+        getMenuInflater().inflate(R.menu.menu_about, menu);
 
         mSwitchShowSecure = (ToggleButton) menu.findItem(R.id.favouriteBeersMenuItem).getActionView().findViewById(R.id.switch_show_protected);
         mSwitchShowSecure.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -106,14 +112,6 @@ public class AboutBeerActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-
-        if (id == R.id.searchBeerMenuItem) {
-
-            Dialogs dialogs = new Dialogs(this);
-            dialogs.show();
-
-        }
-
 
         return super.onOptionsItemSelected(item);
     }

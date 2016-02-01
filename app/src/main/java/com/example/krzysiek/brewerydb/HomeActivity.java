@@ -1,8 +1,12 @@
 package com.example.krzysiek.brewerydb;
 
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
 
 
@@ -11,22 +15,31 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ToggleButton;
 
 
-import com.example.krzysiek.brewerydb.dialogs.Dialogs;
 import com.example.krzysiek.brewerydb.models.Brewery;
 import com.example.krzysiek.brewerydb.models.Datum;
 import com.example.krzysiek.brewerydb.network.ApiInterface;
 import com.example.krzysiek.brewerydb.ormlite.BeerDataBaseTemplate;
 import com.example.krzysiek.brewerydb.ormlite.DatabaseHelper;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.mobsandgeeks.saripaar.ValidationError;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +59,23 @@ public class HomeActivity extends AppCompatActivity {
     public static final String BASE_API_URL = "https://api.brewerydb.com/v2";
 
 
+    final Context context = this;
     private RecyclerView mRecyclerView;
     private CardViewAdapter adapter2;
     private ProgressDialog progress;
     private ToggleButton mSwitchShowSecure;
 
 
+    EditText searchBeerEditText;
+
+
     DatabaseHelper dbHelper;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,19 +87,25 @@ public class HomeActivity extends AppCompatActivity {
 
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
 
-        fetchData();
+        //searchBeerEditText = (EditText) findViewById(R.id.searchBeerEditText);
 
+        fetchData("Zywiec");
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
-    public void fetchData() {
+    public void fetchData(String beerName) {
 
         progress = ProgressDialog.show(this, "Pobieranie danych...", "Proszę czekać...", true, false, null);
 
         RestAdapter adapter = new RestAdapter.Builder().setEndpoint(BASE_API_URL)
-                .setLogLevel(retrofit.RestAdapter.LogLevel.FULL).build();
+                .setLogLevel(RestAdapter.LogLevel.FULL).build();
         ApiInterface breweryRestInterface = adapter.create(ApiInterface.class);
 
-        breweryRestInterface.getBeerReport(new Callback<Brewery>() {
+
+        breweryRestInterface.getBeerReport(beerName, new Callback<Brewery>() {
             @Override
             public void success(Brewery breweries, Response response) {
 
@@ -167,8 +196,6 @@ public class HomeActivity extends AppCompatActivity {
         mSwitchShowSecure.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-
             }
         });
 
@@ -183,18 +210,87 @@ public class HomeActivity extends AppCompatActivity {
 
         if (id == R.id.searchBeerMenuItem) {
 
-            Dialogs dialogs = new Dialogs(this);
-            dialogs.show();
+            final Validator validator = new Validator(this);
+
+            LayoutInflater layoutInflater = LayoutInflater.from(context);
+            View searchDialog = layoutInflater.inflate(R.layout.dialog_box, null);
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+            builder.setView(searchDialog);
+
+            searchBeerEditText = (EditText) searchDialog.findViewById(R.id.searchBeerEditText);
+
+            builder.setTitle("Wyszukaj piwo");
+
+
+            builder.setPositiveButton("Szukaj", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    if (searchBeerEditText.getText().toString() != null) {
+                        simpleBeerList.clear();
+                        fetchData(searchBeerEditText.getText().toString());
+                    }
+
+                }
+            });
+
+            builder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+
 
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public static void searchBeer(String text) {
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Home Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.krzysiek.brewerydb/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Home Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://com.example.krzysiek.brewerydb/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
 }
 
 
