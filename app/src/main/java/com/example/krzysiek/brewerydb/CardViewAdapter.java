@@ -2,6 +2,8 @@ package com.example.krzysiek.brewerydb;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,23 +16,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import com.example.krzysiek.brewerydb.models.Datum;
-import com.example.krzysiek.brewerydb.utils.SharedPreference;
+
 import com.squareup.picasso.Picasso;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.BreweryViewHolder> {
 
 
     private List<String> dataSource;
-    private List<Datum> favoriteBeerList;
     private Context context;
-
-    SharedPreference sharedPreference;
+    private ArrayList<String> urlBeersList = new ArrayList<String>();
+    private ArrayList<String> nameBeerList = new ArrayList<String>();
 
 
     public CardViewAdapter(Context context, ArrayList<String> dataSource) {
@@ -55,10 +57,10 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
         holder.nameBeerTextView.setText(dataSource.get(position).toString());
         holder.imageViewBeer.setImageResource(R.drawable.icon_beer);
-        String urlMedium = HomeActivity.beerPhotoMediumUrlsList.get(position);
+        final String urlMedium = HomeActivity.beerPhotoMediumUrlsList.get(position);
         String urlLarge = HomeActivity.beerPhotoLargeUrlsList.get(position);
         String abv = HomeActivity.beerABVList.get(position);
-        String description = HomeActivity.beerDescriptionList.get(position);
+        final String description = HomeActivity.beerDescriptionList.get(position);
         final Context context = holder.imageViewBeer.getContext();
         Picasso.with(context)
                 .load(urlMedium)
@@ -67,22 +69,49 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                 .into(holder.imageViewBeer);
 
 
-        holder.mCardView.setTag(position);
-        sharedPreference = new SharedPreference();
-
-
         holder.addToFavouriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+                SharedPreferences pref = context.getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = pref.edit();
+                Set<String> urlBeerSet = new HashSet<String>();
+                Set<String> nameBeerSet = new HashSet<String>();
+
                 if (buttonView.isChecked()) {
                     buttonView.setBackgroundResource(R.color.addToFavouriteButton);
-                    Toast.makeText(context,"Dodano do ulubionych",Toast.LENGTH_SHORT).show();
+
+
+                    urlBeersList.add(urlMedium);
+                    nameBeerList.add(dataSource.get(position).toString());
+
+                    urlBeerSet.addAll(urlBeersList);
+                    editor.putStringSet("urlBeersSet", urlBeerSet);
+
+                    nameBeerSet.addAll(nameBeerList);
+                    editor.putStringSet("nameBeerSet", nameBeerSet);
+
+                    Log.d("ZapiszurlBeerSet", String.valueOf(urlBeerSet.size()));
+                    Log.d("ZapisznameBeer", String.valueOf(nameBeerSet.size()));
+
+                    editor.commit();
 
 
                 } else {
 
                     buttonView.setBackgroundResource(R.color.colorPrimaryDark);
+                    urlBeersList.remove(urlMedium);
+                    nameBeerList.remove(dataSource.get(position).toString());
+
+                    urlBeerSet.addAll(urlBeersList);
+                    editor.putStringSet("urlBeersSet", urlBeerSet);
+
+                    nameBeerSet.addAll(nameBeerList);
+                    editor.putStringSet("nameBeerSet", nameBeerSet);
+
+
+                    Log.d("UsunurlBeerSet", String.valueOf(urlBeerSet.size()));
+                    Log.d("UsunnameBeer", String.valueOf(nameBeerSet.size()));
 
                 }
             }

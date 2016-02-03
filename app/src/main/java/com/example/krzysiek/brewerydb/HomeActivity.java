@@ -6,11 +6,15 @@ import android.app.ProgressDialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
 
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -36,13 +40,12 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.mobsandgeeks.saripaar.ValidationError;
 import com.mobsandgeeks.saripaar.Validator;
-import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
@@ -62,6 +65,7 @@ public class HomeActivity extends AppCompatActivity {
     final Context context = this;
     private RecyclerView mRecyclerView;
     private CardViewAdapter adapter2;
+    private CardViewAdapter favoriteBeerAdapter;
     private ProgressDialog progress;
     private ToggleButton mSwitchShowSecure;
 
@@ -87,9 +91,9 @@ public class HomeActivity extends AppCompatActivity {
 
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
 
-        //searchBeerEditText = (EditText) findViewById(R.id.searchBeerEditText);
 
         fetchData("Zywiec");
+
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -196,6 +200,33 @@ public class HomeActivity extends AppCompatActivity {
         mSwitchShowSecure.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                if (mSwitchShowSecure.isChecked()) {
+
+                    SharedPreferences pref = context.getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = pref.edit();
+
+                    Set<String> urlBeerSet = pref.getStringSet("urlBeersSet", null);
+                    ArrayList<String> urlBeerList = new ArrayList<String>(urlBeerSet);
+
+                    Set<String> nameBeerSet = pref.getStringSet("nameBeerSet", null);
+                    ArrayList<String> nameBeerList = new ArrayList<String>(nameBeerSet);
+
+                    //progress = ProgressDialog.show(getApplicationContext(), "Pobieranie danych...", "Proszę czekać...", true, false, null);
+
+                    mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
+                    mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    favoriteBeerAdapter = new CardViewAdapter(HomeActivity.this, nameBeerList);
+                    mRecyclerView.setAdapter(favoriteBeerAdapter);
+                    progress.hide();
+                } else {
+                    mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
+                    mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    adapter2 = new CardViewAdapter(HomeActivity.this, simpleBeerList);
+                    mRecyclerView.setAdapter(adapter2);
+                }
+
+
             }
         });
 
