@@ -3,7 +3,6 @@ package com.example.krzysiek.brewerydb;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 
@@ -69,7 +67,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                 .into(holder.imageViewBeer);
 
 
-        holder.addToFavouriteButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.addToFavouriteToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
@@ -130,7 +128,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
     public class BreweryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView nameBeerTextView;
         private ImageView imageViewBeer;
-        private ToggleButton addToFavouriteButton;
+        private ToggleButton addToFavouriteToggleButton;
         private Context context;
         public CardView mCardView;
 
@@ -141,7 +139,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
             itemView.setOnClickListener(this);
             nameBeerTextView = (TextView) itemView.findViewById(R.id.nameBeerTextView);
             imageViewBeer = (ImageView) itemView.findViewById(R.id.imageViewBeer);
-            addToFavouriteButton = (ToggleButton) itemView.findViewById(R.id.addToFavouriteButton);
+            addToFavouriteToggleButton = (ToggleButton) itemView.findViewById(R.id.addToFavouriteButton);
         }
 
 
