@@ -4,97 +4,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:weightSum="1"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.krzysiek.brewerydb.AboutBeerActivity"
-    tools:showIn="@layout/activity_about_beer">
+    tools:showIn="@layout/activity_about_beer"
+    android:weightSum="1">
+
 
 
     <ImageView
-        android:id="@+id/imageViewBeerDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="16dp" />
-
+        android:layout_margin="16dp"
+        android:id="@+id/imageViewBeerDetails"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp">
 
-
         <TextView
-            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/textView"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView"
             android:text="Volt: "
-            android:textColor="@color/PrimaryText"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:textColor="@color/PrimaryText"
+            android:id="@+id/textView2"
 
             />
 
         <TextView
-            android:id="@+id/abvBeerTextViewDeitals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/addToFavouriteDetailsButton"
+            android:layout_below="@+id/textView2"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView2"
+            android:layout_above="@+id/addToFavouriteDetailsButton"
             android:layout_weight="0.5"
             android:padding="3dp"
+            android:id="@+id/abvBeerTextViewDeitals"
+            android:textSize="20sp"
             android:textColor="@color/PrimaryText"
-            android:textSize="20sp" />
+            />
 
 
     </LinearLayout>
 
-
     <TextView
-        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@+id/imageViewBeerDetails"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/imageViewBeerDetails"
-        android:layout_marginTop="5dp"
         android:text="Opis: "
-        android:textColor="@color/PrimaryText"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:textColor="@color/PrimaryText"
+        android:id="@+id/textView3"
 
         />
 
     <TextView
-        android:id="@+id/descriptionBeerDetailsTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         android:layout_weight="0.5"
-        android:textColor="@color/PrimaryText" />
+        android:layout_marginTop="5dp"
+        android:textColor="@color/PrimaryText"
+        android:id="@+id/descriptionBeerDetailsTextView"/>
 
 
     <ToggleButton
-        android:id="@+id/addToFavouriteDetailsButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:background="@color/colorPrimaryDark"
         android:gravity="center"
-        android:padding="5dp"
-        android:textColor="#FFFFFF"
+        android:id="@+id/addToFavouriteDetailsButton"
         android:textOff="Dodaj do ulubionych"
-        android:textOn="Usuń z ulubionych" />
+        android:textOn="Usuń z ulubionych"
+        android:textColor="#FFFFFF"
+        android:background="@color/colorPrimaryDark"
+        android:padding="5dp"
+        android:layout_centerHorizontal="true" />
 
 
 </LinearLayout>

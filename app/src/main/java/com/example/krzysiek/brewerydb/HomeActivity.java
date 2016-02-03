@@ -212,7 +212,6 @@ public class HomeActivity extends AppCompatActivity {
                     Set<String> nameBeerSet = pref.getStringSet("nameBeerSet", null);
                     ArrayList<String> nameBeerList = new ArrayList<String>(nameBeerSet);
 
-                    //progress = ProgressDialog.show(getApplicationContext(), "Pobieranie danych...", "Proszę czekać...", true, false, null);
 
                     mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
