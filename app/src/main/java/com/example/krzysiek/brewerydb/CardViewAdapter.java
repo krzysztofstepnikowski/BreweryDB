@@ -79,7 +79,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                 if (buttonView.isChecked()) {
                     buttonView.setBackgroundResource(R.color.addToFavouriteButton);
 
-                    buttonView.setTag("add");
+                    buttonView.setTag("addFavoiteBeer");
                     urlBeersList.add(urlMedium);
                     nameBeerList.add(dataSource.get(position).toString());
 
@@ -98,7 +98,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                 } else {
 
                     buttonView.setBackgroundResource(R.color.colorPrimaryDark);
-                    buttonView.setTag("remove");
+                    buttonView.setTag("removeFavoriteBeer");
                     urlBeersList.remove(urlMedium);
                     nameBeerList.remove(dataSource.get(position).toString());
 
