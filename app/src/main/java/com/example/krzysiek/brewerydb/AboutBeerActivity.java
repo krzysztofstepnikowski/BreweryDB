@@ -18,8 +18,6 @@ import android.widget.ToggleButton;
 import com.squareup.picasso.Picasso;
 
 
-
-
 public class AboutBeerActivity extends AppCompatActivity {
 
     private ImageView imageViewBeerDetails;

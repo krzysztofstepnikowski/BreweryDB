@@ -98,14 +98,8 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                 } else {
 
                     buttonView.setBackgroundResource(R.color.colorPrimaryDark);
-                    urlBeersList.remove(urlMedium);
-                    nameBeerList.remove(dataSource.get(position).toString());
-
-                    urlBeerSet.addAll(urlBeersList);
-                    editor.putStringSet("urlBeersSet", urlBeerSet);
-
-                    nameBeerSet.addAll(nameBeerList);
-                    editor.putStringSet("nameBeerSet", nameBeerSet);
+                    editor.remove("urlBeerSet");
+                    editor.remove("nameBeerSet");
 
 
                     Log.d("UsunurlBeerSet", String.valueOf(urlBeerSet.size()));
