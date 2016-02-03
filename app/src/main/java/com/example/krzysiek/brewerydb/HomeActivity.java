@@ -181,7 +181,7 @@ public class HomeActivity extends AppCompatActivity {
 
                     }
                 }
-
+            progress.hide();
             }
 
             @Override
@@ -207,7 +207,7 @@ public class HomeActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = pref.edit();
 
                     Set<String> urlBeerSet = pref.getStringSet("urlBeersSet", null);
-                    ArrayList<String> urlBeerList = new ArrayList<String>(urlBeerSet);
+                    ArrayList<String> urlBeerList = new ArrayList<>(urlBeerSet);
 
                     Set<String> nameBeerSet = pref.getStringSet("nameBeerSet", null);
                     ArrayList<String> nameBeerList = new ArrayList<String>(nameBeerSet);
