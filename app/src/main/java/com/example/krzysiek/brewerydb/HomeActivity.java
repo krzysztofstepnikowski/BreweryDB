@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -27,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 
@@ -43,6 +46,10 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mobsandgeeks.saripaar.Validator;
 
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -68,7 +75,7 @@ public class HomeActivity extends AppCompatActivity {
     private CardViewAdapter favoriteBeerAdapter;
     private ProgressDialog progress;
     private ToggleButton mSwitchShowSecure;
-
+    boolean internetAccess = false;
 
     EditText searchBeerEditText;
 
@@ -85,14 +92,20 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        isAvailable();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
 
+        if(internetAccess==true){
+            Toast.makeText(getApplicationContext(), "Jest net",Toast.LENGTH_LONG).show();
+            fetchData("Zywiec");
+        } else if(internetAccess==false){
+           createOfflineList();
 
-        fetchData("Zywiec");
+        }
+
 
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -117,11 +130,6 @@ public class HomeActivity extends AppCompatActivity {
                 dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplication(), DatabaseHelper.class);
                 final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
                 //////////////////////////////
-                int j = 0;
-                for (Object obj : studDao.queryForAll()) {
-                    BeerDataBaseTemplate wdt = (BeerDataBaseTemplate) obj;
-                    Log.d("Imie piwa z bazy:", wdt.getBeerName().toString());
-                }
 
 
                 //Dodaj do bazy
@@ -133,8 +141,8 @@ public class HomeActivity extends AppCompatActivity {
                                         false)
                         );
                         List<BeerDataBaseTemplate> list2a = studDao.queryForAll();
-                        Log.d("baza: ", list2a.get(j).toString());
-                        j++;
+
+
                     }
                     //////////////////////////////
 
@@ -181,7 +189,7 @@ public class HomeActivity extends AppCompatActivity {
 
                     }
                 }
-            progress.hide();
+                progress.hide();
             }
 
             @Override
@@ -280,6 +288,63 @@ public class HomeActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+    public void createOfflineList(){
+        DatabaseHelper dbHelper;
+        dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplication(), DatabaseHelper.class);
+        final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
+
+        int j = 0;
+        ArrayList<String> offlineBeers = new ArrayList<String>();
+        int size=0;
+        for (Object obj : studDao.queryForAll()) {
+            BeerDataBaseTemplate wdt = (BeerDataBaseTemplate) obj;
+            Log.d("Imie piwa z bazy:", wdt.getBeerName().toString());
+            String beer = wdt.getBeerName().toString();
+            offlineBeers.add(beer);
+            size = offlineBeers.size();
+            Log.d("Rozmiar nowej: ", size + "");
+
+            // TUTAJ JAK DODASZ DO BAZY TO POBIERZ PRAWIDŁOWO
+
+            beerPhotoMediumUrlsList.add("dupa");
+            beerPhotoLargeUrlsList.add("cipsko");
+            beerABVList.add("kutas");
+            beerDescriptionList.add("Rząsa cwel");
+
+        }
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        favoriteBeerAdapter = new CardViewAdapter(HomeActivity.this, offlineBeers);
+        mRecyclerView.setAdapter(favoriteBeerAdapter);
+    }
+
+
+
+    public Boolean isAvailable() {
+        try {
+            Process p1 = java.lang.Runtime.getRuntime().exec("ping -c 1    www.google.com");
+            int returnVal = p1.waitFor();
+            boolean reachable = (returnVal==0);
+            if(reachable){
+
+
+                return internetAccess=true;
+            }
+            else{
+
+            }
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 
 
     @Override
