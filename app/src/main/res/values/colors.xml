@@ -6,4 +6,6 @@
     <color name="PrimaryText">#212121</color>
     <color name="SecondaryText">#727272</color>
     <color name="addToFavouriteButton">#388E3C</color>
+    <color name="orange">#FF9900</color>
+    <color name="blue">#000099</color>
 </resources>

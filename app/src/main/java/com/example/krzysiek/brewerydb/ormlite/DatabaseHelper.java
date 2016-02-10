@@ -11,12 +11,14 @@ import com.j256.ormlite.table.TableUtils;
 import java.sql.SQLException;
 
 /**
- * Created by SlawomirKustra on 30.01.2016.
+ * @author Krzysztof Stępnikowski
+ *         Odpowiedzialna za połączenie i stworzenie lokalnej bazy danych.
+ * @class DatabaseHelper
  */
 public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
 
     private Context context;
-    private static final String DATABASE_NAME = "beerdb";
+    private static final String DATABASE_NAME = "brewerydb";
     private static final int DATABASE_VERSION = 1;
 
 

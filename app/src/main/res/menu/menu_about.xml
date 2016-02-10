@@ -7,7 +7,7 @@
         android:id="@+id/favouriteBeersMenuItem"
         android:enabled="false"
         android:orderInCategory="100"
-        android:title="Ulubione"
+        android:title="@string/favorites"
         android:visible="true"
         app:actionLayout="@layout/show_protected"
         app:showAsAction="always" />

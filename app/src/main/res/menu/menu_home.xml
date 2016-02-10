@@ -7,7 +7,7 @@
         android:id="@+id/favouriteBeersMenuItem"
         android:enabled="false"
         android:orderInCategory="100"
-        android:title="Ulubione"
+        android:title="@string/favorites"
         android:visible="true"
         app:actionLayout="@layout/show_protected"
         app:showAsAction="always" />
@@ -15,7 +15,7 @@
     <item
         android:id="@+id/searchBeerMenuItem"
         android:icon="@drawable/ic_search"
-        android:title="Szukaj"
+        android:title="@string/search"
         android:visible="true"
         app:showAsAction="always" />
 </menu>

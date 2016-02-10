@@ -10,7 +10,7 @@
         android:id="@+id/searchBeerEditText"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Wpisz nazwę piwa..."
+        android:hint="@string/prompt"
         android:inputType="text"
         android:padding="10dp" />
 

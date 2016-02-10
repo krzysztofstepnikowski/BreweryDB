@@ -6,11 +6,14 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 /**
- * Created by SlawomirKustra on 12.01.2016.
+ * @author Krzysztof Stępnikowski
+ *         Tworzy plik konfiguracyjny dla bazy OrmLite
+ * @class DatabaseConfigUtil
  */
 public class DataBaseConfigUtil extends OrmLiteConfigUtil {
 
     private static final Class<?>[] classes = new Class[]{BeerDataBaseTemplate.class};
+
     public static void main(String[] args) throws IOException, SQLException {
         writeConfigFile("ormlite_config.txt", classes);
     }

@@ -14,8 +14,11 @@
       <entry name="!?*.aj" />
     </wildcardResourcePatterns>
     <annotationProcessing>
-      <profile default="true" name="Default" enabled="false">
-        <processorPath useClasspath="true" />
+      <profile default="true" name="Default" enabled="true">
+        <sourceOutputDir name="aa-gen" />
+        <processorPath useClasspath="false">
+          <entry name="E:/Kurs javastart.pl/Android/BreweryDB/app/libs/androidannotations-bundle-3.3.2/androidannotations-3.3.2.jar" />
+        </processorPath>
       </profile>
     </annotationProcessing>
   </component>

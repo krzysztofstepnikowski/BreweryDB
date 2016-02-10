@@ -12,33 +12,71 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 
+import com.example.krzysiek.brewerydb.ormlite.BeerDataBaseTemplate;
+import com.example.krzysiek.brewerydb.ormlite.DatabaseHelper;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.UpdateBuilder;
 import com.squareup.picasso.Picasso;
 
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import retrofit.http.Query;
 
+/**
+ * @author Krzysztof Stępnikowski
+ * @class CardViewAdapter
+ * Odpowiada za wygląd pojedynczego elementu RecyclerView
+ */
 public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.BreweryViewHolder> {
 
 
+    /**
+     * Zmienna dataSource
+     * Lista przechowująca nazwy piw
+     */
     private List<String> dataSource;
+
+    /**
+     * Zmienna context
+     * Przechowuje aktualny motyw widoku
+     */
     private Context context;
-    private ArrayList<String> urlBeersList = new ArrayList<String>();
-    private ArrayList<String> nameBeerList = new ArrayList<String>();
 
+    /**
+     * Lista przechowująca ulubione piwa
+     */
+    public static ArrayList<String> favoriteBeers = new ArrayList<String>();
 
+    /**
+     * Konstruktor klasy CardViewAdapter
+     *
+     * @param context
+     * @param dataSource
+     */
     public CardViewAdapter(Context context, ArrayList<String> dataSource) {
         this.context = context;
         this.dataSource = dataSource;
     }
 
-
+    /**
+     * Metoda onCreateViewHolder typu BrewerViewHolder
+     * Odpowiada za widok pojedynczego elementu listy RecyclerView
+     *
+     * @param parent
+     * @param viewType
+     * @return breweryViewHolder
+     */
     @Override
     public BreweryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -50,15 +88,18 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         return breweryViewHolder;
     }
 
+    /**
+     * Metoda onBindViewHolder
+     *
+     * @param holder
+     * @param position Odpowiada za wypełnienie elementów listy RecyclerView prawidłowymi danymi: zdjęcie piwa i jego nazwę
+     */
     @Override
     public void onBindViewHolder(final BreweryViewHolder holder, final int position) {
 
         holder.nameBeerTextView.setText(dataSource.get(position).toString());
         holder.imageViewBeer.setImageResource(R.drawable.icon_beer);
         final String urlMedium = HomeActivity.beerPhotoMediumUrlsList.get(position);
-        String urlLarge = HomeActivity.beerPhotoLargeUrlsList.get(position);
-        String abv = HomeActivity.beerABVList.get(position);
-        final String description = HomeActivity.beerDescriptionList.get(position);
         final Context context = holder.imageViewBeer.getContext();
         Picasso.with(context)
                 .load(urlMedium)
@@ -71,46 +112,61 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                SharedPreferences pref = context.getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = pref.edit();
-                Set<String> urlBeerSet = new HashSet<String>();
-                Set<String> nameBeerSet = new HashSet<String>();
+                DatabaseHelper dbHelper;
+                dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(context, DatabaseHelper.class);
+                final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
+                UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
+                BeerDataBaseTemplate wdt = new BeerDataBaseTemplate();
+
 
                 if (buttonView.isChecked()) {
+
+
                     buttonView.setBackgroundResource(R.color.addToFavouriteButton);
 
-                    buttonView.setTag("addFavoiteBeer");
-                    urlBeersList.add(urlMedium);
-                    nameBeerList.add(dataSource.get(position).toString());
+                    try {
 
-                    urlBeerSet.addAll(urlBeersList);
-                    editor.putStringSet("urlBeersSet", urlBeerSet);
+                        updateBuilder.updateColumnValue("beerFav", true);
+                        updateBuilder.where().eq("beerName", dataSource.get(position).toString());
+                        updateBuilder.update();
 
-                    nameBeerSet.addAll(nameBeerList);
-                    editor.putStringSet("nameBeerSet", nameBeerSet);
+                        Toast.makeText(context, "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
 
-                    Log.d("ZapiszurlBeerSet", String.valueOf(urlBeerSet.size()));
-                    Log.d("ZapisznameBeer", String.valueOf(nameBeerSet.size()));
 
-                    editor.commit();
+                        if (dataSource.get(position).toString() != null) {
+                            favoriteBeers.add(dataSource.get(position).toString());
+                        } else {
+                            favoriteBeers.add("Brak danych");
+                        }
+
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
+                    Log.d("Favorite size= ", String.valueOf(favoriteBeers.size()));
 
 
                 } else {
-
                     buttonView.setBackgroundResource(R.color.colorPrimaryDark);
-                    buttonView.setTag("removeFavoriteBeer");
-                    urlBeersList.remove(urlMedium);
-                    nameBeerList.remove(dataSource.get(position).toString());
 
-                    urlBeerSet.addAll(urlBeersList);
-                    editor.putStringSet("urlBeerSet", urlBeerSet);
-
-                    nameBeerSet.addAll(nameBeerList);
-                    editor.putStringSet("nameBeerSet", nameBeerSet);
+                    try {
 
 
-                    Log.d("UsunurlBeerSet", String.valueOf(urlBeerSet.size()));
-                    Log.d("UsunnameBeer", String.valueOf(nameBeerSet.size()));
+                        updateBuilder.updateColumnValue("beerFav", false);
+                        updateBuilder.where().eq("beerName",dataSource.get(position).toString());
+                        updateBuilder.update();
+
+                        Toast.makeText(context, "Usunięto z ulubionych", Toast.LENGTH_SHORT).show();
+                        favoriteBeers.remove(dataSource.get(position));
+
+
+                        Log.d("Favorite size= ", String.valueOf(favoriteBeers.size()));
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+
 
                 }
             }
@@ -119,6 +175,12 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
     }
 
+    /**
+     * Metoda getItemCount()
+     * Metoda zwraca aktualny rozmiar listy, w której znajdują się nazwy piw
+     *
+     * @return dataSource.size()
+     */
     @Override
     public int getItemCount() {
         Log.d("Rozmiar listy: ", String.valueOf(dataSource.size()));
@@ -126,6 +188,11 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         return dataSource.size();
     }
 
+    /**
+     * @author Krzysztof Stępnikowski
+     *         Tworzy widok pojedynczego elementu listy RecyclerView
+     * @class BreweryViewHolder
+     */
     public class BreweryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView nameBeerTextView;
         private ImageView imageViewBeer;
@@ -144,6 +211,13 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         }
 
 
+        /**
+         * Metoda onClick()
+         * Odpowiada za akcję wywołaną poprzez kliknięcie na pojedynczy element listy.
+         * Wysyła odpowiednie dane do drugiego Intenta, w którym znajdują się szczegóły o danym piwie.
+         *
+         * @param v
+         */
         @Override
         public void onClick(View v) {
 

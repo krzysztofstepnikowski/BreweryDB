@@ -17,19 +17,62 @@ import android.widget.ToggleButton;
 
 import com.squareup.picasso.Picasso;
 
-
+/**
+ * @author Krzysztof Stępnikowski
+ *         Przedstawia szczegóły piwa.
+ * @class AboutBeerActivity
+ */
 public class AboutBeerActivity extends AppCompatActivity {
 
+    /**
+     * Zmienna imageViewBeerDetails
+     * Obiekt klasy ImageView
+     * Wyświetla zdjęcię piwa w rozmiarze: large
+     */
     private ImageView imageViewBeerDetails;
+
+    /**
+     * Zmienna abvBeerTextViewDetails
+     * Obiekt klasy TextView
+     * Wyświetla zawartość objętości alkoholu w piwie
+     */
     private TextView abvBeerTextViewDetails;
+
+    /**
+     * Zmienna descriptionBeerTextViewDetails
+     * Obiekt klasy TextView
+     * Wyświetla opis piwa
+     */
     private TextView descriptionBeerTextViewDetails;
-    private ToggleButton addToFavouriteDetailsButton;
 
-    private ToggleButton mSwitchShowSecure;
+    /**
+     * Zmienna addToFavoriteDetailsButton
+     * Obiekt klasy ToggleButton
+     * Odpowiada za akcję dodawania/usuwania piwa z "ulubionych"
+     */
+    private ToggleButton addToFavoriteDetailsButton;
 
+    /**
+     * Zmienna favoriteToggleButton
+     * Obiekt klasy ToggleButton
+     * Jest to przycisk znajdujący się w Toolbarze, który ukazuje listę piw dodanych do ulubionych
+     */
+    private ToggleButton favoriteToggleButton;
+
+    /**
+     * Zmienna context
+     * Przechowuje aktualny motyw widoku
+     */
     final Context context = this;
 
 
+    /**
+     * Metoda onCreate()
+     * Tworzy widok drugiej aktywności.
+     * Przedstawia szczegóły na temat wybranego piwa.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +80,7 @@ public class AboutBeerActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         Bundle extras = getIntent().getExtras();
@@ -68,8 +111,8 @@ public class AboutBeerActivity extends AppCompatActivity {
         descriptionBeerTextViewDetails = (TextView) findViewById(R.id.descriptionBeerDetailsTextView);
         descriptionBeerTextViewDetails.setText(descriptionBeer);
 
-        addToFavouriteDetailsButton = (ToggleButton) findViewById(R.id.addToFavouriteDetailsButton);
-        addToFavouriteDetailsButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        addToFavoriteDetailsButton = (ToggleButton) findViewById(R.id.addToFavouriteDetailsButton);
+        addToFavoriteDetailsButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (buttonView.isChecked()) {
@@ -85,12 +128,19 @@ public class AboutBeerActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Metoda typu boolean onCreateOptionsMenu()
+     * Odpowiada za wygląd menu.
+     *
+     * @param menu
+     * @return true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_about, menu);
 
-        mSwitchShowSecure = (ToggleButton) menu.findItem(R.id.favouriteBeersMenuItem).getActionView().findViewById(R.id.switch_show_protected);
-        mSwitchShowSecure.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        favoriteToggleButton = (ToggleButton) menu.findItem(R.id.favouriteBeersMenuItem).getActionView().findViewById(R.id.switch_show_protected);
+        favoriteToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
@@ -101,6 +151,13 @@ public class AboutBeerActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * Metoda typu boolean onOptionsItemSelected
+     * Odpowiada za akcję przycisków znajdujących się w Toolbarze.
+     *
+     * @param item
+     * @return super.onOptionsItemSelected(item)
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 

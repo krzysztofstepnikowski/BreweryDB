@@ -6,15 +6,11 @@ import android.app.ProgressDialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 
 
-import android.preference.PreferenceManager;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,54 +34,126 @@ import com.example.krzysiek.brewerydb.models.Datum;
 import com.example.krzysiek.brewerydb.network.ApiInterface;
 import com.example.krzysiek.brewerydb.ormlite.BeerDataBaseTemplate;
 import com.example.krzysiek.brewerydb.ormlite.DatabaseHelper;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.mobsandgeeks.saripaar.Validator;
 
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Random;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
+/**
+ * @author Krzysztof Stępnikowski
+ *         Przedstawia główny ekran aplikacji
+ * @class HomeActivity
+ */
 public class HomeActivity extends AppCompatActivity {
 
+    /**
+     * Lista przechowująca nazwy piw
+     */
     private ArrayList<String> simpleBeerList = new ArrayList<String>();
+
+    /**
+     * Lista przechowująca zdjęcia piw o rozmiarze: medium
+     */
     public static ArrayList<String> beerPhotoMediumUrlsList = new ArrayList<String>();
+
+    /**
+     * Lista przechowująca zdjęcia piw o rozmiarze: large
+     */
     public static ArrayList<String> beerPhotoLargeUrlsList = new ArrayList<String>();
+
+    /**
+     * Lista przechowująca dane o objętości alkoholu w piwie
+     */
     public static ArrayList<String> beerABVList = new ArrayList<String>();
+
+    /**
+     * Lista przechowująca opis szczegółowy piwa
+     */
     public static ArrayList<String> beerDescriptionList = new ArrayList<String>();
+
+    /**
+     * Lista przechowująca dane o piwach w trybie offline.
+     */
+    ArrayList<String> offlineBeers = new ArrayList<String>();
+
+    /**
+     * Zmienna statyczna BASE_API_URL
+     * przechowuje link do serwisu API
+     */
     public static final String BASE_API_URL = "https://api.brewerydb.com/v2";
 
 
-    final Context context = this;
-    private RecyclerView mRecyclerView;
-    private CardViewAdapter adapter2;
-    private CardViewAdapter favoriteBeerAdapter;
-    private ProgressDialog progress;
-    private ToggleButton mSwitchShowSecure;
-    boolean internetAccess = false;
-
-    EditText searchBeerEditText;
-
-
-    DatabaseHelper dbHelper;
     /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     * Zmienna context
+     * Przechowuje aktualny motyw widoku
      */
-    private GoogleApiClient client;
+    final Context context = this;
+
+    /**
+     * Zmienna mRecyclerView
+     * Obiekt klasy RecyclerView
+     */
+    private RecyclerView mRecyclerView;
+
+    /**
+     * Zmienna adapter2
+     * Obiekt klasy CardViewAdapter
+     */
+    private CardViewAdapter adapter2;
+
+    /**
+     * Zmienna favoriteBeerAdapter
+     * Obiekt klasy CardViewAdapter
+     */
+    private CardViewAdapter favoriteBeerAdapter;
+    /**
+     * Zmienna progress
+     * Obiekt klasy ProgressDialog
+     * Wyświetla dialog informujący użytkownika np. o pobieraniu danych z serwisu API.
+     */
+    private ProgressDialog progress;
+
+    /**
+     * Zmienna favoriteBeerToggleButton
+     * Obiekt klasy ToggleButton
+     * Jest to przycisk znajdujący się w Toolbarze, który ukazuje listę piw dodanych do ulubionych.
+     */
+    private ToggleButton favoriteBeerToggleButton;
+
+    /**
+     * Zmienna searchBeerEditText
+     * Obiekt klasy EditText
+     * Pole, w którym użytkownik podaje nazwę piwa, które chce wyszukać.
+     */
+    private EditText searchBeerEditText;
+
+    /**
+     * Zmienna mSwipeRefreshLayout
+     * Obiekt klasy SwipeRefreshLayout
+     * Odpowiada za tzw. mechanizm "Pull to refresh"
+     */
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+
+    /**
+     * Zmienna dbHelper
+     * Obiekt klasy DatabaseHelper
+     * Odpowiada za połączenie z lokalną bazą danych.
+     */
+    private DatabaseHelper dbHelper;
+
+    /**
+     * Zmienna internetAccess typu boolean
+     */
+    boolean internetAccess = false;
 
 
     @Override
@@ -96,25 +164,44 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
 
-        if(internetAccess==true){
-            Toast.makeText(getApplicationContext(), "Jest net",Toast.LENGTH_LONG).show();
+        getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeLayout);
+
+        /**
+         * Sprawdzenie czy urządzenie mobilne posiada dostęp do Internetu
+         */
+        if (internetAccess == true) {
+            Toast.makeText(getApplicationContext(), "Wykryto dostęp do Internetu", Toast.LENGTH_LONG).show();
             fetchData("Zywiec");
-        } else if(internetAccess==false){
-           createOfflineList();
+        } else if (internetAccess == false) {
+
+            Toast.makeText(getApplicationContext(), "Brak dostępu do Internetu.\nPraca w trybie offline", Toast.LENGTH_LONG).show();
+            try {
+
+                createOfflineList();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
 
         }
 
 
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
+    /**
+     * Metoda publiczna fetchData()
+     * Odpowiada za pobieranie danych z serwisu API
+     *
+     * @param beerName
+     */
     public void fetchData(String beerName) {
 
+        beerDescriptionList.clear();
+        beerABVList.clear();
+        beerPhotoMediumUrlsList.clear();
+        beerPhotoLargeUrlsList.clear();
         progress = ProgressDialog.show(this, "Pobieranie danych...", "Proszę czekać...", true, false, null);
 
         RestAdapter adapter = new RestAdapter.Builder().setEndpoint(BASE_API_URL)
@@ -122,28 +209,47 @@ public class HomeActivity extends AppCompatActivity {
         ApiInterface breweryRestInterface = adapter.create(ApiInterface.class);
 
 
+        /**Metoda success() zaimplementowana z biblioteki Retrofit
+         * W przypadku sukcesu połączenia się z serwisem, dane zostają pobierane do odpowiednich list
+         * @param breweries
+         * @param response
+         */
         breweryRestInterface.getBeerReport(beerName, new Callback<Brewery>() {
             @Override
             public void success(Brewery breweries, Response response) {
 
-                DatabaseHelper dbHelper;
                 dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplication(), DatabaseHelper.class);
                 final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
+                BeerDataBaseTemplate wdt = new BeerDataBaseTemplate();
+
+
                 //////////////////////////////
+                //Dodawanie do bazy
+                    for (Datum i : breweries.getData()) {
+                        if (i.getName() != null && i.getAbv() != null && i.getDescription() != null && i.getLabels() != null) {
+
+                            studDao.createIfNotExists(new BeerDataBaseTemplate(
+                                            "" + i.getName(),
+                                            i.getAbv(), i.getDescription(), i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
+                                            false)
+                            );
+
+                        } else if (i.getName() != null && i.getAbv() != null && i.getDescription() == null && i.getLabels() != null) {
+                            studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), i.getAbv(), "Brak danych", i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
+                                    false));
+
+                        } else if (i.getName() != null && i.getAbv() != null && i.getDescription() == null && i.getLabels() == null) {
+                            studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), i.getAbv(), "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
+
+                        } else if (i.getName() != null && i.getAbv() == null && i.getDescription() == null && i.getLabels() == null) {
+                            studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
+
+                        } else if (i.getName() == null && i.getAbv() == null && i.getDescription() == null && i.getLabels() == null) {
+                            studDao.createOrUpdate(new BeerDataBaseTemplate("Brak danych", "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
+
+                        }
 
 
-                //Dodaj do bazy
-                for (Datum i : breweries.getData()) {
-                    if (i.getName() != null && i.getAbv() != null) {
-                        studDao.create(new BeerDataBaseTemplate(
-                                        "" + i.getName(),
-                                        i.getAbv(),
-                                        false)
-                        );
-                        List<BeerDataBaseTemplate> list2a = studDao.queryForAll();
-
-
-                    }
                     //////////////////////////////
 
                     if (i.getName() != null) {
@@ -185,70 +291,129 @@ public class HomeActivity extends AppCompatActivity {
                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         adapter2 = new CardViewAdapter(HomeActivity.this, simpleBeerList);
                         mRecyclerView.setAdapter(adapter2);
+
+                        if (simpleBeerList.size() > 0) {
+                            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                                @Override
+                                public void onRefresh() {
+                                    mSwipeRefreshLayout.setRefreshing(true);
+                                    refreshContent();
+                                }
+                            });
+                        }
                         progress.hide();
 
                     }
                 }
                 progress.hide();
+                simpleBeerList.size();
+                Log.d("SimpleBeerList size: ", String.valueOf(simpleBeerList.size()));
             }
 
+            /**
+             * Metoda failure() zaimplementowana z biblioteki Retrofit
+             * Odpowiada za procesy związane z brakiem sukcesu połączenia się z serwisem API
+             * Wyświetla stosowny komunikat
+             * @param error
+             */
             @Override
             public void failure(RetrofitError error) {
                 Log.d("Dane: ", error.toString());
                 progress.hide();
+                Toast.makeText(getApplicationContext(), "Brak dostępu do Internetu.\nPraca w trybie offline", Toast.LENGTH_LONG).show();
+                //createOfflineList();
+
+
             }
         });
     }
 
+    private List<String> getNewBeerData() {
+        List<String> newBeerData = new ArrayList<>();
+
+        for (int i = 0; i < simpleBeerList.size(); i++) {
+            int randomBeerDataIndex = new Random().nextInt(simpleBeerList.size() - 1);
+            newBeerData.add(simpleBeerList.get(randomBeerDataIndex));
+        }
+
+        return newBeerData;
+    }
+
+    /**
+     * Metoda typu boolean onCreateOptionsMenu()
+     * Odpowiada za wygląd menu.
+     *
+     * @param menu
+     * @return true
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
 
-        mSwitchShowSecure = (ToggleButton) menu.findItem(R.id.favouriteBeersMenuItem).getActionView().findViewById(R.id.switch_show_protected);
-        mSwitchShowSecure.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        if (internetAccess == true) {
+            menu.findItem(R.id.searchBeerMenuItem).setVisible(true);
+        } else {
+            Toast.makeText(context, "Opcja wyszukiwania zablokowana.\nMożliwa tylko w trybie online.", Toast.LENGTH_LONG).show();
+            menu.findItem(R.id.searchBeerMenuItem).setVisible(false);
+
+        }
+
+        favoriteBeerToggleButton = (ToggleButton) menu.findItem(R.id.favouriteBeersMenuItem).getActionView().findViewById(R.id.switch_show_protected);
+        favoriteBeerToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
-                if (mSwitchShowSecure.isChecked()) {
+                if (favoriteBeerToggleButton.isChecked()) {
 
-                    SharedPreferences pref = context.getApplicationContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = pref.edit();
+                    if (!CardViewAdapter.favoriteBeers.isEmpty()) {
 
-                    Set<String> urlBeerSet = pref.getStringSet("urlBeersSet", null);
-                    ArrayList<String> urlBeerList = new ArrayList<>(urlBeerSet);
+                        mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
+                        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        adapter2 = new CardViewAdapter(HomeActivity.this, CardViewAdapter.favoriteBeers);
+                        mRecyclerView.setAdapter(adapter2);
+                    } else {
+                        Toast.makeText(context, "Brak ulubionych piw", Toast.LENGTH_SHORT).show();
+                    }
 
-                    Set<String> nameBeerSet = pref.getStringSet("nameBeerSet", null);
-                    ArrayList<String> nameBeerList = new ArrayList<String>(nameBeerSet);
 
-
-                    mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
-                    mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    favoriteBeerAdapter = new CardViewAdapter(HomeActivity.this, nameBeerList);
-                    mRecyclerView.setAdapter(favoriteBeerAdapter);
-                    progress.hide();
                 } else {
-                    mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
-                    mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                    adapter2 = new CardViewAdapter(HomeActivity.this, simpleBeerList);
-                    mRecyclerView.setAdapter(adapter2);
+
+
+                    if (internetAccess == true) {
+                        mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
+                        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        adapter2 = new CardViewAdapter(HomeActivity.this, simpleBeerList);
+                        mRecyclerView.setAdapter(adapter2);
+                    } else {
+                        mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
+                        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                        favoriteBeerAdapter = new CardViewAdapter(HomeActivity.this, offlineBeers);
+                        mRecyclerView.setAdapter(favoriteBeerAdapter);
+                    }
+
                 }
 
 
             }
-        });
 
+        });
 
         return true;
     }
-//test
+
+    /**
+     * Metoda typu boolean onOptionsItemSelected
+     * Odpowiada za akcję przycisków znajdujących się w Toolbarze.
+     *
+     * @param item
+     * @return super.onOptionsItemSelected(item)
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
 
         if (id == R.id.searchBeerMenuItem) {
-
-            final Validator validator = new Validator(this);
 
             LayoutInflater layoutInflater = LayoutInflater.from(context);
             View searchDialog = layoutInflater.inflate(R.layout.dialog_box, null);
@@ -259,8 +424,6 @@ public class HomeActivity extends AppCompatActivity {
             searchBeerEditText = (EditText) searchDialog.findViewById(R.id.searchBeerEditText);
 
             builder.setTitle("Wyszukaj piwo");
-
-
             builder.setPositiveButton("Szukaj", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -289,30 +452,44 @@ public class HomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Metoda createOfflineList()
+     * Odpowiada za tworzenie listy RecyclerView pobierając dane z lokalnej bazy,
+     * wówczas gdy aplikacja działa w trybie offline.
+     */
+    public void createOfflineList() throws SQLException {
 
-
-    public void createOfflineList(){
-        DatabaseHelper dbHelper;
         dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplication(), DatabaseHelper.class);
         final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
+        //item.findItem(R.id.searchBeerMenuItem).setVisible(false);
+        mSwipeRefreshLayout.setEnabled(false);
+
+        beerDescriptionList.clear();
+        beerABVList.clear();
+        beerPhotoMediumUrlsList.clear();
+        beerPhotoLargeUrlsList.clear();
 
         int j = 0;
-        ArrayList<String> offlineBeers = new ArrayList<String>();
-        int size=0;
+        int size = 0;
         for (Object obj : studDao.queryForAll()) {
             BeerDataBaseTemplate wdt = (BeerDataBaseTemplate) obj;
             Log.d("Imie piwa z bazy:", wdt.getBeerName().toString());
             String beer = wdt.getBeerName().toString();
+            String voltage = wdt.getBeerVoltage().toString();
+            String description = wdt.getBeerDescription().toString();
+            String beerImageMedium = wdt.getBeerImageMedium().toString();
+            String beerImageLarge = wdt.getBeerImageLarge().toString();
             offlineBeers.add(beer);
             size = offlineBeers.size();
             Log.d("Rozmiar nowej: ", size + "");
 
-            // TUTAJ JAK DODASZ DO BAZY TO POBIERZ PRAWIDŁOWO
 
-            beerPhotoMediumUrlsList.add("dupa");
-            beerPhotoLargeUrlsList.add("cipsko");
-            beerABVList.add("kutas");
-            beerDescriptionList.add("Rząsa cwel");
+            //JAK DODANE DO BAZY TO POBIERZ PRAWIDŁOWO
+
+            beerPhotoMediumUrlsList.add(beerImageMedium);
+            beerPhotoLargeUrlsList.add(beerImageLarge);
+            beerABVList.add(voltage);
+            beerDescriptionList.add(description);
 
         }
 
@@ -322,21 +499,24 @@ public class HomeActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(favoriteBeerAdapter);
     }
 
-
-
+    /**
+     * Metoda isAvailable typu boolean
+     * Sprawdza, czy urządzenie posiada dostęp do Internetu poprzez pingowanie ze stroną Google.
+     *
+     * @return false
+     */
     public Boolean isAvailable() {
         try {
             Process p1 = java.lang.Runtime.getRuntime().exec("ping -c 1    www.google.com");
             int returnVal = p1.waitFor();
-            boolean reachable = (returnVal==0);
-            if(reachable){
+            boolean reachable = (returnVal == 0);
+            if (reachable) {
 
 
-                return internetAccess=true;
-            }
-            else{
+                return internetAccess = true;
+            } else {
 
-                
+
             }
 
         } catch (Exception e) {
@@ -346,46 +526,30 @@ public class HomeActivity extends AppCompatActivity {
         return false;
     }
 
+    private void refreshContent() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                adapter2 = new CardViewAdapter(context, (ArrayList<String>) getNewBeerData());
+                mRecyclerView.setAdapter(adapter2);
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }, 2000);
+    }
 
 
     @Override
     public void onStart() {
         super.onStart();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Home Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.example.krzysiek.brewerydb/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Home Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app deep link URI is correct.
-                Uri.parse("android-app://com.example.krzysiek.brewerydb/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
     }
 }
 

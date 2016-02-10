@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -14,29 +14,66 @@
     tools:context="com.example.krzysiek.brewerydb.AboutBeerActivity"
     tools:showIn="@layout/activity_about_beer">
 
-
-    <ImageView
-        android:id="@+id/imageViewBeerDetails"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_margin="16dp" />
-
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:id="@+id/imageViewBeerDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="16dp" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView"
+                android:text="@string/voltage"
+                android:textColor="@color/PrimaryText"
+                android:textSize="20sp"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:id="@+id/abvBeerTextViewDeitals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/addToFavouriteDetailsButton"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView2"
+                android:layout_weight="0.5"
+                android:padding="3dp"
+                android:textColor="@color/PrimaryText"
+                android:textSize="20sp" />
+
+
+        </LinearLayout>
 
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView"
-            android:text="Volt: "
+            android:layout_below="@+id/imageViewBeerDetails"
+            android:layout_marginTop="5dp"
+            android:text="@string/description"
             android:textColor="@color/PrimaryText"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -44,57 +81,27 @@
             />
 
         <TextView
-            android:id="@+id/abvBeerTextViewDeitals"
+            android:id="@+id/descriptionBeerDetailsTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/addToFavouriteDetailsButton"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/textView2"
+            android:layout_marginTop="5dp"
             android:layout_weight="0.5"
-            android:padding="3dp"
-            android:textColor="@color/PrimaryText"
-            android:textSize="20sp" />
+            android:textColor="@color/PrimaryText" />
+
+
+        <ToggleButton
+            android:id="@+id/addToFavouriteDetailsButton"
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textColor="#FFFFFF"
+            android:textOff="@string/addToFavorite"
+            android:textOn="@string/removeFromFavorite" />
 
 
     </LinearLayout>
-
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/imageViewBeerDetails"
-        android:layout_marginTop="5dp"
-        android:text="Opis: "
-        android:textColor="@color/PrimaryText"
-        android:textSize="20sp"
-        android:textStyle="bold"
-
-        />
-
-    <TextView
-        android:id="@+id/descriptionBeerDetailsTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_weight="0.5"
-        android:textColor="@color/PrimaryText" />
-
-
-    <ToggleButton
-        android:id="@+id/addToFavouriteDetailsButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:background="@color/colorPrimaryDark"
-        android:gravity="center"
-        android:padding="5dp"
-        android:textColor="#FFFFFF"
-        android:textOff="Dodaj do ulubionych"
-        android:textOn="Usuń z ulubionych" />
-
-
-</LinearLayout>
+</ScrollView>
