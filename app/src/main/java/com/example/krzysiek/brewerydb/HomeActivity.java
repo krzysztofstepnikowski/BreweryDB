@@ -245,7 +245,7 @@ public class HomeActivity extends AppCompatActivity {
 
                             else
                             {
-                                studDao.createIfNotExists(new BeerDataBaseTemplate(i.getId(),
+                                studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(),
                                                 "" + i.getName(),
                                                 i.getAbv(), i.getDescription(), i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
                                                 false)
