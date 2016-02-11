@@ -9,8 +9,10 @@ import com.j256.ormlite.field.DatabaseField;
  */
 public class BeerDataBaseTemplate {
 
-    @DatabaseField(generatedId = true)
+    @DatabaseField(generatedId = true, unique = true)
     private int id;
+    @DatabaseField
+    private String beerID;
     @DatabaseField
     private String beerName;
     @DatabaseField
@@ -24,8 +26,9 @@ public class BeerDataBaseTemplate {
     @DatabaseField
     private boolean beerFav;
 
-    public BeerDataBaseTemplate(int id, String beerName, String beerVoltage, String beerDescription, String beerImageMedium, String beerImageLarge, boolean beerFav) {
+    public BeerDataBaseTemplate(int id, String beerID, String beerName, String beerVoltage, String beerDescription, String beerImageMedium, String beerImageLarge, boolean beerFav) {
         this.id = id;
+        this.beerID=beerID;
         this.beerName = beerName;
         this.beerVoltage = beerVoltage;
         this.beerDescription = beerDescription;
@@ -34,7 +37,8 @@ public class BeerDataBaseTemplate {
         this.beerFav = beerFav;
     }
 
-    public BeerDataBaseTemplate(String beerName, String beerVoltage, String beerDescription, String beerImageMedium, String beerImageLarge, boolean beerFav) {
+    public BeerDataBaseTemplate(String beerID,String beerName, String beerVoltage, String beerDescription, String beerImageMedium, String beerImageLarge, boolean beerFav) {
+        this.beerID=beerID;
         this.beerName = beerName;
         this.beerVoltage = beerVoltage;
         this.beerDescription = beerDescription;
@@ -56,6 +60,14 @@ public class BeerDataBaseTemplate {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getBeerID() {
+        return beerID;
+    }
+
+    public void setBeerID(String beerID) {
+        this.beerID = beerID;
     }
 
     public String getBeerName() {

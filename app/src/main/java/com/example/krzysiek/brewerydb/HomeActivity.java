@@ -35,6 +35,7 @@ import com.example.krzysiek.brewerydb.ormlite.BeerDataBaseTemplate;
 import com.example.krzysiek.brewerydb.ormlite.DatabaseHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.QueryBuilder;
 
 
 import java.sql.SQLException;
@@ -219,7 +220,9 @@ public class HomeActivity extends AppCompatActivity {
 
                 dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplication(), DatabaseHelper.class);
                 final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
+                QueryBuilder<BeerDataBaseTemplate,String> queryBuilder = studDao.queryBuilder();
                 BeerDataBaseTemplate wdt = new BeerDataBaseTemplate();
+
 
 
                 //////////////////////////////
@@ -227,24 +230,80 @@ public class HomeActivity extends AppCompatActivity {
                 for (Datum i : breweries.getData()) {
                     if (i.getName() != null && i.getAbv() != null && i.getDescription() != null && i.getLabels() != null) {
 
-                        studDao.createIfNotExists(new BeerDataBaseTemplate(
+                        try {
+                            queryBuilder.where().eq("beerID",i.getId().toString()).query();
+
+                            if(studDao.idExists(i.getId()))
+                            {
+                                Log.d("if", String.valueOf(studDao.idExists(i.getId())));
+                                studDao.update(new BeerDataBaseTemplate(i.getId(),
                                         "" + i.getName(),
                                         i.getAbv(), i.getDescription(), i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
-                                        false)
-                        );
+                                        false));
+                            }
+
+
+                            else
+                            {
+                                studDao.createIfNotExists(new BeerDataBaseTemplate(i.getId(),
+                                                "" + i.getName(),
+                                                i.getAbv(), i.getDescription(), i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
+                                                false)
+                                );
+                            }
+
+                            Log.d("beerID", String.valueOf(queryBuilder.where().eq("beerID", i.getId().toString())));
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+
 
                     } else if (i.getName() != null && i.getAbv() != null && i.getDescription() == null && i.getLabels() != null) {
-                        studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), i.getAbv(), "Brak danych", i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
+
+                        try {
+                            queryBuilder.where().eq("beerID",i.getId().toString()).query();
+                            Log.d("beerID", String.valueOf(queryBuilder.where().eq("beerID", i.getId().toString())));
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+                        studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(),"" + i.getName(), i.getAbv(), "Brak danych", i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
                                 false));
 
                     } else if (i.getName() != null && i.getAbv() != null && i.getDescription() == null && i.getLabels() == null) {
-                        studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), i.getAbv(), "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
+
+                        try {
+                            queryBuilder.where().eq("beerID",i.getId().toString()).query();
+                            Log.d("beerID", String.valueOf(queryBuilder.where().eq("beerID", i.getId().toString())));
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+                        studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(),"" + i.getName(), i.getAbv(), "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
+
 
                     } else if (i.getName() != null && i.getAbv() == null && i.getDescription() == null && i.getLabels() == null) {
-                        studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
+
+                        try {
+                            queryBuilder.where().eq("beerID",i.getId().toString()).query();
+                            Log.d("beerID", String.valueOf(queryBuilder.where().eq("beerID", i.getId().toString())));
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+                        studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(),"" + i.getName(), "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
 
                     } else if (i.getName() == null && i.getAbv() == null && i.getDescription() == null && i.getLabels() == null) {
-                        studDao.createOrUpdate(new BeerDataBaseTemplate("Brak danych", "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
+
+                        try {
+                            queryBuilder.where().eq("beerID",i.getId().toString()).query();
+                            Log.d("beerID", String.valueOf(queryBuilder.where().eq("beerID", i.getId().toString())));
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+                        studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(),"Brak danych", "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
 
                     }
 
