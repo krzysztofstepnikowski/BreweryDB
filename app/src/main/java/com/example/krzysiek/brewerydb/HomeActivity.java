@@ -231,15 +231,19 @@ public class HomeActivity extends AppCompatActivity {
                     if (i.getName() != null && i.getAbv() != null && i.getDescription() != null && i.getLabels() != null) {
 
                         try {
-                            queryBuilder.where().eq("beerID",i.getId().toString()).query();
-
-                            if(studDao.idExists(i.getId()))
+                            boolean znalezionoRekord = false;
+                           List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID",i.getId().toString()).query();
+                            if(!beerList.isEmpty()){
+                                znalezionoRekord = true;
+                                Log.d(HomeActivity.class.getName(),"Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" +i.getId().toString());
+                            }
+                            if(znalezionoRekord)
                             {
                                 Log.d("if", String.valueOf(studDao.idExists(i.getId())));
                                 studDao.update(new BeerDataBaseTemplate(i.getId(),
                                         "" + i.getName(),
                                         i.getAbv(), i.getDescription(), i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
-                                        false));
+                                        false,i.getId()));
                             }
 
 
@@ -248,11 +252,11 @@ public class HomeActivity extends AppCompatActivity {
                                 studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(),
                                                 "" + i.getName(),
                                                 i.getAbv(), i.getDescription(), i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
-                                                false)
+                                                false,i.getId())
                                 );
                             }
 
-                            Log.d("beerID", String.valueOf(queryBuilder.where().eq("beerID", i.getId().toString())));
+                          //  Log.d("beerID", String.valueOf(queryBuilder.where().eq("beerID", i.getId().toString())));
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
@@ -262,8 +266,10 @@ public class HomeActivity extends AppCompatActivity {
                     } else if (i.getName() != null && i.getAbv() != null && i.getDescription() == null && i.getLabels() != null) {
 
                         try {
-                            queryBuilder.where().eq("beerID",i.getId().toString()).query();
-                            Log.d("beerID", String.valueOf(queryBuilder.where().eq("beerID", i.getId().toString())));
+                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID",i.getId().toString()).query();
+                            if(!beerList.isEmpty()){
+                                Log.d(HomeActivity.class.getName(),"Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" +i.getId().toString());
+                            }
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
@@ -274,8 +280,10 @@ public class HomeActivity extends AppCompatActivity {
                     } else if (i.getName() != null && i.getAbv() != null && i.getDescription() == null && i.getLabels() == null) {
 
                         try {
-                            queryBuilder.where().eq("beerID",i.getId().toString()).query();
-                            Log.d("beerID", String.valueOf(queryBuilder.where().eq("beerID", i.getId().toString())));
+                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID",i.getId().toString()).query();
+                            if(!beerList.isEmpty()){
+                                Log.d(HomeActivity.class.getName(),"Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" +i.getId().toString());
+                            }
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
@@ -286,8 +294,10 @@ public class HomeActivity extends AppCompatActivity {
                     } else if (i.getName() != null && i.getAbv() == null && i.getDescription() == null && i.getLabels() == null) {
 
                         try {
-                            queryBuilder.where().eq("beerID",i.getId().toString()).query();
-                            Log.d("beerID", String.valueOf(queryBuilder.where().eq("beerID", i.getId().toString())));
+                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID",i.getId().toString()).query();
+                            if(!beerList.isEmpty()){
+                                Log.d(HomeActivity.class.getName(),"Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" +i.getId().toString());
+                            }
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
@@ -297,8 +307,10 @@ public class HomeActivity extends AppCompatActivity {
                     } else if (i.getName() == null && i.getAbv() == null && i.getDescription() == null && i.getLabels() == null) {
 
                         try {
-                            queryBuilder.where().eq("beerID",i.getId().toString()).query();
-                            Log.d("beerID", String.valueOf(queryBuilder.where().eq("beerID", i.getId().toString())));
+                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID",i.getId().toString()).query();
+                            if(!beerList.isEmpty()){
+                                Log.d(HomeActivity.class.getName(),"Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" +i.getId().toString());
+                            }
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }

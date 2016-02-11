@@ -14,6 +14,8 @@ public class BeerDataBaseTemplate {
     @DatabaseField
     private String beerID;
     @DatabaseField
+    private String webBeerID;
+    @DatabaseField
     private String beerName;
     @DatabaseField
     private String beerVoltage;
@@ -45,6 +47,16 @@ public class BeerDataBaseTemplate {
         this.beerImageMedium = beerImageMedium;
         this.beerImageLarge = beerImageLarge;
         this.beerFav = beerFav;
+    }
+    public BeerDataBaseTemplate(String beerID,String beerName, String beerVoltage, String beerDescription, String beerImageMedium, String beerImageLarge, boolean beerFav, String webBeerID) {
+        this.beerID=beerID;
+        this.beerName = beerName;
+        this.beerVoltage = beerVoltage;
+        this.beerDescription = beerDescription;
+        this.beerImageMedium = beerImageMedium;
+        this.beerImageLarge = beerImageLarge;
+        this.beerFav = beerFav;
+        this.webBeerID = webBeerID;
     }
 
     public BeerDataBaseTemplate(String beerName) {
@@ -117,6 +129,12 @@ public class BeerDataBaseTemplate {
     public void setBeerFav(boolean beerFav) {
         this.beerFav = beerFav;
     }
+    public String getWebBeerID() {
+        return webBeerID;
+    }
 
+    public void setWebBeerID(String webBeerID) {
+        this.webBeerID = webBeerID;
+    }
 
 }
