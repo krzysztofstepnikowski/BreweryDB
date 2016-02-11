@@ -225,29 +225,29 @@ public class HomeActivity extends AppCompatActivity {
 
                 //////////////////////////////
                 //Dodawanie do bazy
-                    for (Datum i : breweries.getData()) {
-                        if (i.getName() != null && i.getAbv() != null && i.getDescription() != null && i.getLabels() != null) {
+                for (Datum i : breweries.getData()) {
+                    if (i.getName() != null && i.getAbv() != null && i.getDescription() != null && i.getLabels() != null) {
 
-                            studDao.createIfNotExists(new BeerDataBaseTemplate(
-                                            "" + i.getName(),
-                                            i.getAbv(), i.getDescription(), i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
-                                            false)
-                            );
+                        studDao.createIfNotExists(new BeerDataBaseTemplate(
+                                        "" + i.getName(),
+                                        i.getAbv(), i.getDescription(), i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
+                                        false)
+                        );
 
-                        } else if (i.getName() != null && i.getAbv() != null && i.getDescription() == null && i.getLabels() != null) {
-                            studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), i.getAbv(), "Brak danych", i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
-                                    false));
+                    } else if (i.getName() != null && i.getAbv() != null && i.getDescription() == null && i.getLabels() != null) {
+                        studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), i.getAbv(), "Brak danych", i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
+                                false));
 
-                        } else if (i.getName() != null && i.getAbv() != null && i.getDescription() == null && i.getLabels() == null) {
-                            studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), i.getAbv(), "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
+                    } else if (i.getName() != null && i.getAbv() != null && i.getDescription() == null && i.getLabels() == null) {
+                        studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), i.getAbv(), "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
 
-                        } else if (i.getName() != null && i.getAbv() == null && i.getDescription() == null && i.getLabels() == null) {
-                            studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
+                    } else if (i.getName() != null && i.getAbv() == null && i.getDescription() == null && i.getLabels() == null) {
+                        studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
 
-                        } else if (i.getName() == null && i.getAbv() == null && i.getDescription() == null && i.getLabels() == null) {
-                            studDao.createOrUpdate(new BeerDataBaseTemplate("Brak danych", "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
+                    } else if (i.getName() == null && i.getAbv() == null && i.getDescription() == null && i.getLabels() == null) {
+                        studDao.createOrUpdate(new BeerDataBaseTemplate("Brak danych", "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
 
-                        }
+                    }
 
 
                     //////////////////////////////
@@ -460,8 +460,6 @@ public class HomeActivity extends AppCompatActivity {
     public void createOfflineList() throws SQLException {
 
 
-
-
         dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplication(), DatabaseHelper.class);
         final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
         //item.findItem(R.id.searchBeerMenuItem).setVisible(false);
@@ -488,7 +486,6 @@ public class HomeActivity extends AppCompatActivity {
             Log.d("Rozmiar nowej: ", String.valueOf(size));
 
 
-
             //JAK DODANE DO BAZY TO POBIERZ PRAWIDŁOWO
 
             beerPhotoMediumUrlsList.add(beerImageMedium);
@@ -498,8 +495,7 @@ public class HomeActivity extends AppCompatActivity {
 
         }
 
-        if(size==0)
-        {
+        if (size == 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("Uwaga");
             builder.setIcon(R.drawable.ic_info);

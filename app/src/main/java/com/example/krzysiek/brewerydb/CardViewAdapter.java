@@ -121,7 +121,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
                 if (buttonView.isChecked()) {
 
-
                     buttonView.setBackgroundResource(R.color.addToFavouriteButton);
 
                     try {
@@ -154,7 +153,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
 
                         updateBuilder.updateColumnValue("beerFav", false);
-                        updateBuilder.where().eq("beerName",dataSource.get(position).toString());
+                        updateBuilder.where().eq("beerName", dataSource.get(position).toString());
                         updateBuilder.update();
 
                         Toast.makeText(context, "Usunięto z ulubionych", Toast.LENGTH_SHORT).show();
