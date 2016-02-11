@@ -459,6 +459,9 @@ public class HomeActivity extends AppCompatActivity {
      */
     public void createOfflineList() throws SQLException {
 
+
+
+
         dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplication(), DatabaseHelper.class);
         final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
         //item.findItem(R.id.searchBeerMenuItem).setVisible(false);
@@ -481,7 +484,9 @@ public class HomeActivity extends AppCompatActivity {
             String beerImageLarge = wdt.getBeerImageLarge().toString();
             offlineBeers.add(beer);
             size = offlineBeers.size();
-            Log.d("Rozmiar nowej: ", size + "");
+
+            Log.d("Rozmiar nowej: ", String.valueOf(size));
+
 
 
             //JAK DODANE DO BAZY TO POBIERZ PRAWIDŁOWO
@@ -491,6 +496,17 @@ public class HomeActivity extends AppCompatActivity {
             beerABVList.add(voltage);
             beerDescriptionList.add(description);
 
+        }
+
+        if(size==0)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Uwaga");
+            builder.setIcon(R.drawable.ic_info);
+            builder.setMessage("Zanim aplikacja zacznie działać offline, pierwsze uruchomienie programu należy zastosować, mając dostęp do Internetu.\n");
+
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         }
 
         mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
