@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -306,7 +305,6 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 }
                 progress.hide();
-                simpleBeerList.size();
                 Log.d("SimpleBeerList size: ", String.valueOf(simpleBeerList.size()));
             }
 
@@ -321,9 +319,6 @@ public class HomeActivity extends AppCompatActivity {
                 Log.d("Dane: ", error.toString());
                 progress.hide();
                 Toast.makeText(getApplicationContext(), "Brak dostępu do Internetu.\nPraca w trybie offline", Toast.LENGTH_LONG).show();
-                //createOfflineList();
-
-
             }
         });
     }
@@ -375,9 +370,7 @@ public class HomeActivity extends AppCompatActivity {
                         Toast.makeText(context, "Brak ulubionych piw", Toast.LENGTH_SHORT).show();
                     }
 
-
                 } else {
-
 
                     if (internetAccess == true) {
                         mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
@@ -392,8 +385,6 @@ public class HomeActivity extends AppCompatActivity {
                     }
 
                 }
-
-
             }
 
         });
@@ -462,7 +453,6 @@ public class HomeActivity extends AppCompatActivity {
 
         dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplication(), DatabaseHelper.class);
         final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
-        //item.findItem(R.id.searchBeerMenuItem).setVisible(false);
         mSwipeRefreshLayout.setEnabled(false);
 
         beerDescriptionList.clear();
@@ -470,7 +460,6 @@ public class HomeActivity extends AppCompatActivity {
         beerPhotoMediumUrlsList.clear();
         beerPhotoLargeUrlsList.clear();
 
-        int j = 0;
         int size = 0;
         for (Object obj : studDao.queryForAll()) {
             BeerDataBaseTemplate wdt = (BeerDataBaseTemplate) obj;
@@ -524,11 +513,7 @@ public class HomeActivity extends AppCompatActivity {
             boolean reachable = (returnVal == 0);
             if (reachable) {
 
-
                 return internetAccess = true;
-            } else {
-
-
             }
 
         } catch (Exception e) {
@@ -550,19 +535,6 @@ public class HomeActivity extends AppCompatActivity {
         }, 2000);
     }
 
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-    }
 }
 
 
