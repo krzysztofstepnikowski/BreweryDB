@@ -59,8 +59,8 @@ public class BeerDataBaseTemplate {
         this.webBeerID = webBeerID;
     }
 
-    public BeerDataBaseTemplate(String beerName) {
-        this.beerName = beerName;
+    public BeerDataBaseTemplate(String beerID) {
+        this.beerID = beerID;
     }
 
     public BeerDataBaseTemplate() {

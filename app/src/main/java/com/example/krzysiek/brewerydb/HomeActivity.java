@@ -220,10 +220,9 @@ public class HomeActivity extends AppCompatActivity {
 
                 dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(getApplication(), DatabaseHelper.class);
                 final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
-                QueryBuilder<BeerDataBaseTemplate,String> queryBuilder = studDao.queryBuilder();
+                QueryBuilder<BeerDataBaseTemplate, String> queryBuilder = studDao.queryBuilder();
                 BeerDataBaseTemplate wdt = new BeerDataBaseTemplate();
-
-
+                boolean findRecord = false;
 
                 //////////////////////////////
                 //Dodawanie do bazy
@@ -231,91 +230,117 @@ public class HomeActivity extends AppCompatActivity {
                     if (i.getName() != null && i.getAbv() != null && i.getDescription() != null && i.getLabels() != null) {
 
                         try {
-                            boolean znalezionoRekord = false;
-                           List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID",i.getId().toString()).query();
-                            if(!beerList.isEmpty()){
-                                znalezionoRekord = true;
-                                Log.d(HomeActivity.class.getName(),"Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" +i.getId().toString());
+
+                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID", i.getId().toString()).query();
+                            if (!beerList.isEmpty()) {
+                                findRecord = true;
+                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" + i.getId().toString());
                             }
-                            if(znalezionoRekord)
-                            {
+                            if (findRecord) {
                                 Log.d("if", String.valueOf(studDao.idExists(i.getId())));
                                 studDao.update(new BeerDataBaseTemplate(i.getId(),
                                         "" + i.getName(),
                                         i.getAbv(), i.getDescription(), i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
-                                        false,i.getId()));
-                            }
-
-
-                            else
-                            {
+                                        false, i.getId()));
+                            } else {
                                 studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(),
                                                 "" + i.getName(),
                                                 i.getAbv(), i.getDescription(), i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
-                                                false,i.getId())
+                                                false, i.getId())
                                 );
                             }
 
-                          //  Log.d("beerID", String.valueOf(queryBuilder.where().eq("beerID", i.getId().toString())));
+                            //  Log.d("beerID", String.valueOf(queryBuilder.where().eq("beerID", i.getId().toString())));
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-
 
 
                     } else if (i.getName() != null && i.getAbv() != null && i.getDescription() == null && i.getLabels() != null) {
 
                         try {
-                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID",i.getId().toString()).query();
-                            if(!beerList.isEmpty()){
-                                Log.d(HomeActivity.class.getName(),"Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" +i.getId().toString());
+                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID", i.getId().toString()).query();
+                            if (!beerList.isEmpty()) {
+                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" + i.getId().toString());
                             }
+
+                            if (findRecord) {
+                                Log.d("if", String.valueOf(studDao.idExists(i.getId())));
+                                studDao.update(new BeerDataBaseTemplate(i.getId(), "" + i.getName(), i.getAbv(), "Brak danych", i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
+                                        false, i.getId()));
+                            } else {
+                                studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(), "" + i.getName(), i.getAbv(), "Brak danych", i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
+                                        false, i.getId()));
+                            }
+
+
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
 
-                        studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(),"" + i.getName(), i.getAbv(), "Brak danych", i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
-                                false));
 
                     } else if (i.getName() != null && i.getAbv() != null && i.getDescription() == null && i.getLabels() == null) {
 
                         try {
-                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID",i.getId().toString()).query();
-                            if(!beerList.isEmpty()){
-                                Log.d(HomeActivity.class.getName(),"Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" +i.getId().toString());
+                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID", i.getId().toString()).query();
+                            if (!beerList.isEmpty()) {
+                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" + i.getId().toString());
                             }
+
+                            if (findRecord) {
+                                Log.d("if", String.valueOf(studDao.idExists(i.getId())));
+                                studDao.update(new BeerDataBaseTemplate(i.getId(), "" + i.getName(), i.getAbv(), "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false
+                                        , i.getId()));
+                            } else {
+                                studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(), "" + i.getName(), i.getAbv(), "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false
+                                        , i.getId()));
+                            }
+
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
-
-                        studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(),"" + i.getName(), i.getAbv(), "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
 
 
                     } else if (i.getName() != null && i.getAbv() == null && i.getDescription() == null && i.getLabels() == null) {
 
                         try {
-                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID",i.getId().toString()).query();
-                            if(!beerList.isEmpty()){
-                                Log.d(HomeActivity.class.getName(),"Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" +i.getId().toString());
+                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID", i.getId().toString()).query();
+                            if (!beerList.isEmpty()) {
+                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" + i.getId().toString());
+                            }
+
+                            if (findRecord) {
+                                studDao.update(new BeerDataBaseTemplate(i.getId(), "" + i.getName(), "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false
+                                        , i.getId()));
+                            } else {
+                                studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(), "" + i.getName(), "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false
+                                        , i.getId()));
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
 
-                        studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(),"" + i.getName(), "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
 
                     } else if (i.getName() == null && i.getAbv() == null && i.getDescription() == null && i.getLabels() == null) {
 
                         try {
-                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID",i.getId().toString()).query();
-                            if(!beerList.isEmpty()){
-                                Log.d(HomeActivity.class.getName(),"Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" +i.getId().toString());
+                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("webBeerID", i.getId().toString()).query();
+                            if (!beerList.isEmpty()) {
+                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" + i.getId().toString());
                             }
+
+                            if (findRecord) {
+                                studDao.update(new BeerDataBaseTemplate(i.getId(), "Brak danych", "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false
+                                        , i.getId()));
+                            } else {
+                                studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(), "Brak danych", "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false
+                                        , i.getId()));
+                            }
+
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
 
-                        studDao.createOrUpdate(new BeerDataBaseTemplate(i.getId(),"Brak danych", "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false));
 
                     }
 
