@@ -10,7 +10,7 @@ fieldName=id
 generatedId=true
 # --field-end--
 # --field-start--
-fieldName=beerID
+fieldName=webBeerID
 # --field-end--
 # --field-start--
 fieldName=beerName
