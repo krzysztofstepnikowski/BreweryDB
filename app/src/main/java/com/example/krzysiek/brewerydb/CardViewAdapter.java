@@ -16,6 +16,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 
+import com.example.krzysiek.brewerydb.models.Datum;
 import com.example.krzysiek.brewerydb.ormlite.BeerDataBaseTemplate;
 import com.example.krzysiek.brewerydb.ormlite.DatabaseHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -69,6 +70,11 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         this.dataSource = dataSource;
     }
 
+    private DatabaseHelper dbHelper;
+
+    boolean isBeerLikeFavorite = false;
+    boolean isNotBeerLikeFavorite = false;
+
     /**
      * Metoda onCreateViewHolder typu BrewerViewHolder
      * Odpowiada za widok pojedynczego elementu listy RecyclerView
@@ -85,6 +91,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
         BreweryViewHolder breweryViewHolder = new BreweryViewHolder(view);
 
+
         return breweryViewHolder;
     }
 
@@ -100,77 +107,165 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         holder.nameBeerTextView.setText(dataSource.get(position).toString());
         holder.imageViewBeer.setImageResource(R.drawable.icon_beer);
         final String urlMedium = HomeActivity.beerPhotoMediumUrlsList.get(position);
-        final Context context = holder.imageViewBeer.getContext();
-        Picasso.with(context)
+        final Context contextImage = holder.imageViewBeer.getContext();
+        Picasso.with(contextImage)
                 .load(urlMedium)
                 .placeholder(R.drawable.icon_beer)
                 .error(R.drawable.icon_beer)
                 .into(holder.imageViewBeer);
 
-
-        holder.addToFavouriteToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                DatabaseHelper dbHelper;
-                dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(context, DatabaseHelper.class);
-                final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
-                UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
-                BeerDataBaseTemplate wdt = new BeerDataBaseTemplate();
+        dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(context, DatabaseHelper.class);
+        final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
+        QueryBuilder<BeerDataBaseTemplate, String> queryBuilder = studDao.queryBuilder();
+        try {
+            List<BeerDataBaseTemplate> beerLikeListFavorites = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", true).and()
+                    .eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString()).query();
+            List<BeerDataBaseTemplate> beerNotLikeListFavorites = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", false).and()
+                    .eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString()).query();
 
 
-                if (buttonView.isChecked()) {
-
-                    buttonView.setBackgroundResource(R.color.addToFavouriteButton);
-
-                    try {
-
-                        updateBuilder.updateColumnValue("beerFav", true);
-                        updateBuilder.where().eq("beerName", dataSource.get(position).toString());
-                        updateBuilder.update();
-
-                        Toast.makeText(context, "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
-
-
-                        if (dataSource.get(position).toString() != null) {
-                            favoriteBeers.add(dataSource.get(position).toString());
-                        } else {
-                            favoriteBeers.add("Brak danych");
-                        }
-
-
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-
-                    Log.d("Favorite size= ", String.valueOf(favoriteBeers.size()));
-
-
-                } else {
-                    buttonView.setBackgroundResource(R.color.colorPrimaryDark);
-
-                    try {
-
-
-                        updateBuilder.updateColumnValue("beerFav", false);
-                        updateBuilder.where().eq("beerName", dataSource.get(position).toString());
-                        updateBuilder.update();
-
-                        Toast.makeText(context, "Usunięto z ulubionych", Toast.LENGTH_SHORT).show();
-                        favoriteBeers.remove(dataSource.get(position));
-
-
-                        Log.d("Favorite size= ", String.valueOf(favoriteBeers.size()));
-
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-
-
-                }
+            if (!beerLikeListFavorites.isEmpty()) {
+                isBeerLikeFavorite = true;
+            } else {
+                isBeerLikeFavorite = false;
             }
-        });
 
+            if (!beerNotLikeListFavorites.isEmpty()) {
+                isNotBeerLikeFavorite = true;
+            } else {
+                isNotBeerLikeFavorite = false;
+            }
+
+
+            if (isBeerLikeFavorite == true) {
+
+                holder.addToFavouriteToggleButton.setBackgroundResource(R.color.addToFavouriteButton);
+                holder.addToFavouriteToggleButton.setText("Usuń z ulubionych");
+
+                holder.addToFavouriteToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                        if (buttonView.isChecked()) {
+                            buttonView.setBackgroundResource(R.color.colorPrimaryDark);
+                            holder.addToFavouriteToggleButton.setTextOn("Dodaj do ulubionych");
+
+                            UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
+                            try {
+                                updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", false);
+                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString());
+                                updateBuilder.update();
+
+
+                                Toast.makeText(context, "Usunięto z ulubionych", Toast.LENGTH_SHORT).show();
+                                favoriteBeers.remove(dataSource.get(position));
+
+
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                            Log.d("Favorite size= ", String.valueOf(favoriteBeers.size()));
+                        } else {
+                            buttonView.setBackgroundResource(R.color.addToFavouriteButton);
+                            holder.addToFavouriteToggleButton.setTextOff("Usuń z ulubionych");
+
+                            UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
+
+                            try {
+
+                                updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", true);
+                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString());
+                                updateBuilder.update();
+
+                                Toast.makeText(context, "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
+
+
+                                if (dataSource.get(position).toString() != null) {
+                                    favoriteBeers.add(dataSource.get(position).toString());
+                                } else {
+                                    favoriteBeers.add("Brak danych");
+                                }
+
+
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+
+                            Log.d("Favorite size= ", String.valueOf(favoriteBeers.size()));
+                        }
+                    }
+
+                });
+
+
+            } else {
+
+                holder.addToFavouriteToggleButton.setBackgroundResource(R.color.colorPrimaryDark);
+                holder.addToFavouriteToggleButton.setText("Dodaj do ulubionych");
+                holder.addToFavouriteToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                        if (buttonView.isChecked()) {
+                            buttonView.setBackgroundResource(R.color.addToFavouriteButton);
+                            holder.addToFavouriteToggleButton.setTextOn("Usuń z ulubionych");
+
+                            UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
+
+                            try {
+
+                                updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", true);
+                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString());
+                                updateBuilder.update();
+
+                                Toast.makeText(context, "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
+
+
+                                if (dataSource.get(position).toString() != null) {
+                                    favoriteBeers.add(dataSource.get(position).toString());
+                                } else {
+                                    favoriteBeers.add("Brak danych");
+                                }
+
+
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+
+                            Log.d("Favorite size= ", String.valueOf(favoriteBeers.size()));
+                        } else {
+                            buttonView.setBackgroundResource(R.color.colorPrimaryDark);
+                            holder.addToFavouriteToggleButton.setTextOff("Dodaj do ulubionych");
+
+                            UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
+                            try {
+                                updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", false);
+                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString());
+                                updateBuilder.update();
+
+
+                                Toast.makeText(context, "Usunięto z ulubionych", Toast.LENGTH_SHORT).show();
+                                favoriteBeers.remove(dataSource.get(position));
+
+
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+                            Log.d("Favorite size= ", String.valueOf(favoriteBeers.size()));
+
+
+                        }
+                    }
+                });
+
+
+            }
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 

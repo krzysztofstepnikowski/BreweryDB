@@ -47,12 +47,13 @@
             android:layout_below="@+id/nameBeerTextView"
             android:layout_alignLeft="@+id/nameBeerTextView"
             android:layout_alignStart="@+id/nameBeerTextView"
+            android:tag="@string/add"
             android:textOn="@string/removeFromFavorite"
             android:textOff="@string/addToFavorite"
-            android:tag="@string/add"
             android:textColor="#FFFFFF"
             android:background="@color/colorPrimaryDark"
             android:padding="5dp"
+
             />
 
 

@@ -136,8 +136,8 @@ public class AboutBeerActivity extends AppCompatActivity {
 
                     try {
 
-                        updateBuilder.updateColumnValue("beerFav", true);
-                        updateBuilder.where().eq("beerName", nameBeer);
+                        updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", true);
+                        updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", nameBeer);
                         updateBuilder.update();
 
                         Toast.makeText(context, "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
@@ -162,8 +162,8 @@ public class AboutBeerActivity extends AppCompatActivity {
 
 
                     try {
-                        updateBuilder.updateColumnValue("beerFav", false);
-                        updateBuilder.where().eq("beerName", nameBeer);
+                        updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", false);
+                        updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", nameBeer);
                         updateBuilder.update();
 
                         Toast.makeText(context, "Usunięto z ulubionych", Toast.LENGTH_SHORT).show();
