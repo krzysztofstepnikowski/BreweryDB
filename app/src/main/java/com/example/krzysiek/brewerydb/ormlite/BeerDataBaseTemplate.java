@@ -4,33 +4,40 @@ import com.j256.ormlite.field.DatabaseField;
 
 /**
  * @author Krzysztof Stępnikowski
- *         Tworzy strukturę bazy danych (schemat).
+ *         Tworzy strukturę bazy danych (model).
  * @class BeerDataBaseTemplate
  */
 public class BeerDataBaseTemplate {
 
-    @DatabaseField(generatedId = true, unique = true)
+    public static final String COLUMN_LOCAL_ID = "BEERDATABASETEMPLATE_TABLE_LOCAL_ID";
+    public static final String COLUMN_BEER_ID = "BEERDATABASETEMPLATE_TABLE_BEER_ID";
+    public static final String COLUMN_BEER_NAME = "BEERDATABASETEMPLATE_TABLE_BEER_NAME";
+    public static final String COLUMN_BEER_VOLTAGE = "BEERDATABASETEMPLATE_TABLE_BEER_VOLTAGE";
+    public static final String COLUMN_BEER_DESCRIPTION = "BEERDATABASETEMPLATE_TABLE_BEER_DESCRIPTION";
+    public static final String COLUMN_BEER_IMAGE_MEDIUM = "BEERDATABASETEMPLATE_TABLE_BEER_IMAGE_MEDIUM";
+    public static final String COLUMN_BEER_IMAGE_LARGE = "BEERDATABASETEMPLATE_TABLE_BEER_IMAGE_LARGE";
+    public static final String COLUMN_BEER_FAVORITE = "BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE";
+
+
+    @DatabaseField(generatedId = true, unique = true, columnName = COLUMN_LOCAL_ID)
     private int id;
-    @DatabaseField
-    private String beerID;
-    @DatabaseField
+    @DatabaseField(columnName = COLUMN_BEER_ID)
     private String webBeerID;
-    @DatabaseField
+    @DatabaseField(columnName = COLUMN_BEER_NAME)
     private String beerName;
-    @DatabaseField
+    @DatabaseField(columnName = COLUMN_BEER_VOLTAGE)
     private String beerVoltage;
-    @DatabaseField
+    @DatabaseField(columnName = COLUMN_BEER_DESCRIPTION)
     private String beerDescription;
-    @DatabaseField
+    @DatabaseField(columnName = COLUMN_BEER_IMAGE_MEDIUM)
     private String beerImageMedium;
-    @DatabaseField
+    @DatabaseField(columnName = COLUMN_BEER_IMAGE_LARGE)
     private String beerImageLarge;
-    @DatabaseField
+    @DatabaseField(columnName = COLUMN_BEER_FAVORITE)
     private boolean beerFav;
 
-    public BeerDataBaseTemplate(int id, String beerID, String beerName, String beerVoltage, String beerDescription, String beerImageMedium, String beerImageLarge, boolean beerFav) {
+    public BeerDataBaseTemplate(int id, String beerName, String beerVoltage, String beerDescription, String beerImageMedium, String beerImageLarge, boolean beerFav) {
         this.id = id;
-        this.beerID=beerID;
         this.beerName = beerName;
         this.beerVoltage = beerVoltage;
         this.beerDescription = beerDescription;
@@ -39,17 +46,7 @@ public class BeerDataBaseTemplate {
         this.beerFav = beerFav;
     }
 
-    public BeerDataBaseTemplate(String beerID,String beerName, String beerVoltage, String beerDescription, String beerImageMedium, String beerImageLarge, boolean beerFav) {
-        this.beerID=beerID;
-        this.beerName = beerName;
-        this.beerVoltage = beerVoltage;
-        this.beerDescription = beerDescription;
-        this.beerImageMedium = beerImageMedium;
-        this.beerImageLarge = beerImageLarge;
-        this.beerFav = beerFav;
-    }
-    public BeerDataBaseTemplate(String beerID,String beerName, String beerVoltage, String beerDescription, String beerImageMedium, String beerImageLarge, boolean beerFav, String webBeerID) {
-        this.beerID=beerID;
+    public BeerDataBaseTemplate(String beerName, String beerVoltage, String beerDescription, String beerImageMedium, String beerImageLarge, boolean beerFav, String webBeerID) {
         this.beerName = beerName;
         this.beerVoltage = beerVoltage;
         this.beerDescription = beerDescription;
@@ -59,8 +56,8 @@ public class BeerDataBaseTemplate {
         this.webBeerID = webBeerID;
     }
 
-    public BeerDataBaseTemplate(String beerID) {
-        this.beerID = beerID;
+    public BeerDataBaseTemplate(String webBeerID) {
+        this.webBeerID = webBeerID;
     }
 
     public BeerDataBaseTemplate() {
@@ -74,13 +71,6 @@ public class BeerDataBaseTemplate {
         this.id = id;
     }
 
-    public String getBeerID() {
-        return beerID;
-    }
-
-    public void setBeerID(String beerID) {
-        this.beerID = beerID;
-    }
 
     public String getBeerName() {
         return beerName;
@@ -129,6 +119,7 @@ public class BeerDataBaseTemplate {
     public void setBeerFav(boolean beerFav) {
         this.beerFav = beerFav;
     }
+
     public String getWebBeerID() {
         return webBeerID;
     }

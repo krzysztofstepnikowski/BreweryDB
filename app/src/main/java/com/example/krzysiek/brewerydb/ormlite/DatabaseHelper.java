@@ -18,8 +18,8 @@ import java.sql.SQLException;
 public class DatabaseHelper  extends OrmLiteSqliteOpenHelper {
 
     private Context context;
-    private static final String DATABASE_NAME = "brewerydb";
-    private static final int DATABASE_VERSION =  2;
+    private static final String DATABASE_NAME = "breweryDB";
+    private static final int DATABASE_VERSION =  3;
 
 
     private RuntimeExceptionDao studRuntimeDAO = null;
