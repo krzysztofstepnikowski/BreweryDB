@@ -570,7 +570,6 @@ public class HomeActivity extends AppCompatActivity {
                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         favoriteBeerAdapter = new CardViewAdapter(HomeActivity.this, simpleBeerList);
                         mRecyclerView.setAdapter(favoriteBeerAdapter);
-                        mRecyclerView.invalidate();
                     } else {
                         mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
@@ -728,10 +727,10 @@ public class HomeActivity extends AppCompatActivity {
 
                 adapter2 = new CardViewAdapter(context, (ArrayList<String>) getNewBeerData());
                 mRecyclerView.setAdapter(adapter2);
-                mSwipeRefreshLayout.setRefreshing(true);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
-        }, 2000);
+        }, 1000);
     }
 
 
