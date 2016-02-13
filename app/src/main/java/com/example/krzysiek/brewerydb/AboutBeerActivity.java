@@ -25,6 +25,7 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -101,7 +102,6 @@ public class AboutBeerActivity extends AppCompatActivity {
     boolean isBeerLikeFavorite = false;
 
 
-
     /**
      * Metoda onCreate()
      * Tworzy widok drugiej aktywności.
@@ -130,26 +130,6 @@ public class AboutBeerActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle(nameBeer);
 
-        imageViewBeerDetails = (ImageView) findViewById(R.id.imageViewBeerDetails);
-        Picasso.with(imageViewBeerDetails.getContext())
-                .load(imageBeer)
-                .into(imageViewBeerDetails);
-
-
-        abvBeerTextViewDetails = (TextView) findViewById(R.id.abvBeerTextViewDeitals);
-
-        if (!abvBeer.equals("Brak danych")) {
-            abvBeerTextViewDetails.setText(abvBeer + "%");
-        } else {
-            abvBeerTextViewDetails.setText(abvBeer);
-        }
-
-        descriptionBeerTextViewDetails = (TextView) findViewById(R.id.descriptionBeerDetailsTextView);
-        descriptionBeerTextViewDetails.setText(descriptionBeer);
-
-        addToFavoriteDetailsButton = (ToggleButton) findViewById(R.id.addToFavouriteDetailsButton);
-
-
         dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(context, DatabaseHelper.class);
         final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
         QueryBuilder<BeerDataBaseTemplate, String> queryBuilder = studDao.queryBuilder();
@@ -157,6 +137,32 @@ public class AboutBeerActivity extends AppCompatActivity {
         try {
             List<BeerDataBaseTemplate> beerLikeListFavorites = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", true).and()
                     .eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", nameBeer).query();
+
+            final List<BeerDataBaseTemplate> list = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", nameBeer).query();
+
+            if (!list.isEmpty()) {
+                Log.d("Lista", list.get(0).getBeerName());
+            }
+
+
+            imageViewBeerDetails = (ImageView) findViewById(R.id.imageViewBeerDetails);
+            Picasso.with(imageViewBeerDetails.getContext())
+                    .load(list.get(0).getBeerImageLarge())
+                    .into(imageViewBeerDetails);
+
+
+            abvBeerTextViewDetails = (TextView) findViewById(R.id.abvBeerTextViewDeitals);
+
+            if (!list.get(0).getBeerVoltage().equals("Brak danych")) {
+                abvBeerTextViewDetails.setText(list.get(0).getBeerVoltage() + "%");
+            } else {
+                abvBeerTextViewDetails.setText(list.get(0).getBeerVoltage());
+            }
+
+            descriptionBeerTextViewDetails = (TextView) findViewById(R.id.descriptionBeerDetailsTextView);
+            descriptionBeerTextViewDetails.setText(list.get(0).getBeerDescription());
+
+            addToFavoriteDetailsButton = (ToggleButton) findViewById(R.id.addToFavouriteDetailsButton);
 
 
             if (!beerLikeListFavorites.isEmpty()) {
@@ -181,12 +187,12 @@ public class AboutBeerActivity extends AppCompatActivity {
                             UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
                             try {
                                 updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", false);
-                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", nameBeer);
+                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", list.get(0).getBeerName());
                                 updateBuilder.update();
 
 
                                 Toast.makeText(context, "Usunięto z ulubionych", Toast.LENGTH_SHORT).show();
-                                CardViewAdapter.favoriteBeers.remove(nameBeer);
+                                CardViewAdapter.favoriteBeers.remove(list.get(0).getBeerName());
 
 
                             } catch (SQLException e) {
@@ -202,14 +208,14 @@ public class AboutBeerActivity extends AppCompatActivity {
                             try {
 
                                 updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", true);
-                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", nameBeer);
+                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", list.get(0).getBeerName());
                                 updateBuilder.update();
 
                                 Toast.makeText(context, "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
 
 
                                 if (nameBeer != null) {
-                                    CardViewAdapter.favoriteBeers.add(nameBeer);
+                                    CardViewAdapter.favoriteBeers.add(list.get(0).getBeerName());
                                 } else {
                                     CardViewAdapter.favoriteBeers.add("Brak danych");
                                 }
@@ -241,14 +247,14 @@ public class AboutBeerActivity extends AppCompatActivity {
                             try {
 
                                 updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", true);
-                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", nameBeer);
+                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", list.get(0).getBeerName());
                                 updateBuilder.update();
 
                                 Toast.makeText(context, "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
 
 
-                                if (nameBeer != null) {
-                                    CardViewAdapter.favoriteBeers.add(nameBeer);
+                                if (list.get(0).getBeerName() != null) {
+                                    CardViewAdapter.favoriteBeers.add(list.get(0).getBeerName());
                                 } else {
                                     CardViewAdapter.favoriteBeers.add("Brak danych");
                                 }
@@ -266,12 +272,12 @@ public class AboutBeerActivity extends AppCompatActivity {
                             UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
                             try {
                                 updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", false);
-                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", nameBeer);
+                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", list.get(0).getBeerName());
                                 updateBuilder.update();
 
 
                                 Toast.makeText(context, "Usunięto z ulubionych", Toast.LENGTH_SHORT).show();
-                                CardViewAdapter.favoriteBeers.remove(nameBeer);
+                                CardViewAdapter.favoriteBeers.remove(list.get(0).getBeerName());
 
 
                             } catch (SQLException e) {
@@ -297,7 +303,7 @@ public class AboutBeerActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
 
-        Intent intent = new Intent(AboutBeerActivity.this,HomeActivity.class);
+        Intent intent = new Intent(AboutBeerActivity.this, HomeActivity.class);
         startActivity(intent);
     }
 }

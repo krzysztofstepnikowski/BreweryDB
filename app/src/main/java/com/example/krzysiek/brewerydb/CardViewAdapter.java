@@ -110,6 +110,31 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(context, DatabaseHelper.class);
         final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
         QueryBuilder<BeerDataBaseTemplate, String> queryBuilder = studDao.queryBuilder();
+
+        try {
+            List<BeerDataBaseTemplate> list = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString()).query();
+
+            if (!list.isEmpty()) {
+                list.get(0).getBeerImageMedium();
+            }
+
+            holder.nameBeerTextView.setText(list.get(0).getBeerName());
+            holder.imageViewBeer.setImageResource(R.drawable.icon_beer);
+
+            String urlImageBeerMedium = list.get(0).getBeerImageMedium().toString();
+            Log.d("Position", String.valueOf(urlImageBeerMedium));
+            Context contextImage = holder.imageViewBeer.getContext();
+            Picasso.with(contextImage)
+                    .load(urlImageBeerMedium)
+                    .placeholder(R.drawable.icon_beer)
+                    .error(R.drawable.icon_beer)
+                    .into(holder.imageViewBeer);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
         try {
             List<BeerDataBaseTemplate> beerLikeListFavorites = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", true).and()
                     .eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString()).query();
@@ -252,18 +277,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-        holder.nameBeerTextView.setText(dataSource.get(position).toString());
-        holder.imageViewBeer.setImageResource(R.drawable.icon_beer);
-
-        String urlImageBeerMedium = HomeActivity.beerPhotoMediumUrlsList.get(position).toString();
-        Log.d("Position", String.valueOf(urlImageBeerMedium));
-        Context contextImage = holder.imageViewBeer.getContext();
-        Picasso.with(contextImage)
-                .load(urlImageBeerMedium)
-                .placeholder(R.drawable.icon_beer)
-                .error(R.drawable.icon_beer)
-                .into(holder.imageViewBeer);
 
 
     }
