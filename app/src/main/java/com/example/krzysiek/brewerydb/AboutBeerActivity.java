@@ -25,7 +25,6 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,24 +62,6 @@ public class AboutBeerActivity extends AppCompatActivity {
      */
     private ToggleButton addToFavoriteDetailsButton;
 
-    /**
-     * Zmienna favoriteToggleButton
-     * Obiekt klasy ToggleButton
-     * Jest to przycisk znajdujący się w Toolbarze, który ukazuje listę piw dodanych do ulubionych
-     */
-    private ToggleButton favoriteToggleButton;
-
-    /**
-     * Zmienna mRecyclerView
-     * Obiekt klasy RecyclerView
-     */
-    private RecyclerView mRecyclerView;
-
-    /**
-     * Zmienna adapter2
-     * Obiekt klasy CardViewAdapter
-     */
-    private CardViewAdapter adapter2;
 
     /**
      * Zmienna context
@@ -122,12 +103,7 @@ public class AboutBeerActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
 
 
-        String imageBeer = extras.getString("imageBeer");
         final String nameBeer = extras.getString("nameBeer");
-        String abvBeer = extras.getString("abvBeer");
-        String descriptionBeer = extras.getString("descriptionBeer");
-
-
         getSupportActionBar().setTitle(nameBeer);
 
         dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(context, DatabaseHelper.class);
@@ -146,9 +122,12 @@ public class AboutBeerActivity extends AppCompatActivity {
 
 
             imageViewBeerDetails = (ImageView) findViewById(R.id.imageViewBeerDetails);
-            Picasso.with(imageViewBeerDetails.getContext())
-                    .load(list.get(0).getBeerImageLarge())
+            Picasso.with(this)
+                    .load(list.get(0).getBeerImageLarge().toString())
+                    .placeholder(R.drawable.icon_beer)
                     .into(imageViewBeerDetails);
+
+            Log.d("ImageViewBeerDetails position: ", list.get(0).getBeerImageLarge());
 
 
             abvBeerTextViewDetails = (TextView) findViewById(R.id.abvBeerTextViewDeitals);

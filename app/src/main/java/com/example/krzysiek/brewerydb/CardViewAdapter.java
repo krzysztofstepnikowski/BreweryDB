@@ -112,17 +112,16 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         QueryBuilder<BeerDataBaseTemplate, String> queryBuilder = studDao.queryBuilder();
 
         try {
-            List<BeerDataBaseTemplate> list = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString()).query();
+            final List<BeerDataBaseTemplate> beerDataBaseTemplatesList = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString()).query();
 
-            if (!list.isEmpty()) {
-                list.get(0).getBeerImageMedium();
+            if (!beerDataBaseTemplatesList.isEmpty()) {
+                beerDataBaseTemplatesList.get(0).getBeerImageMedium();
             }
 
-            holder.nameBeerTextView.setText(list.get(0).getBeerName());
+            holder.nameBeerTextView.setText(beerDataBaseTemplatesList.get(0).getBeerName());
             holder.imageViewBeer.setImageResource(R.drawable.icon_beer);
 
-            String urlImageBeerMedium = list.get(0).getBeerImageMedium().toString();
-            Log.d("Position", String.valueOf(urlImageBeerMedium));
+            String urlImageBeerMedium = beerDataBaseTemplatesList.get(0).getBeerImageMedium().toString();
             Context contextImage = holder.imageViewBeer.getContext();
             Picasso.with(contextImage)
                     .load(urlImageBeerMedium)
@@ -130,14 +129,9 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                     .error(R.drawable.icon_beer)
                     .into(holder.imageViewBeer);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-
-        try {
             List<BeerDataBaseTemplate> beerLikeListFavorites = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", true).and()
-                    .eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString()).query();
+                    .eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", beerDataBaseTemplatesList.get(0).getBeerName()).query();
 
 
             if (!beerLikeListFavorites.isEmpty()) {
@@ -163,12 +157,12 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                             UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
                             try {
                                 updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", false);
-                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString());
+                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", beerDataBaseTemplatesList.get(0).getBeerName().toString());
                                 updateBuilder.update();
 
 
                                 Toast.makeText(context, "Usunięto z ulubionych", Toast.LENGTH_SHORT).show();
-                                favoriteBeers.remove(dataSource.get(position));
+                                favoriteBeers.remove(beerDataBaseTemplatesList.get(0).getBeerName().toString());
 
 
                             } catch (SQLException e) {
@@ -185,14 +179,14 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                             try {
 
                                 updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", true);
-                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString());
+                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", beerDataBaseTemplatesList.get(0).getBeerName().toString());
                                 updateBuilder.update();
 
                                 Toast.makeText(context, "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
 
 
-                                if (dataSource.get(position).toString() != null) {
-                                    favoriteBeers.add(dataSource.get(position).toString());
+                                if (beerDataBaseTemplatesList.get(0).getBeerName().toString() != null) {
+                                    favoriteBeers.add(beerDataBaseTemplatesList.get(0).getBeerName().toString());
                                 } else {
                                     favoriteBeers.add("Brak danych");
                                 }
@@ -226,14 +220,14 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                             try {
 
                                 updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", true);
-                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString());
+                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", beerDataBaseTemplatesList.get(0).getBeerName().toString());
                                 updateBuilder.update();
 
                                 Toast.makeText(context, "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
 
 
-                                if (dataSource.get(position).toString() != null) {
-                                    favoriteBeers.add(dataSource.get(position).toString());
+                                if (beerDataBaseTemplatesList.get(0).getBeerName().toString() != null) {
+                                    favoriteBeers.add(beerDataBaseTemplatesList.get(0).getBeerName().toString());
                                 } else {
                                     favoriteBeers.add("Brak danych");
                                 }
@@ -252,18 +246,18 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                             UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
                             try {
                                 updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", false);
-                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString());
+                                updateBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", beerDataBaseTemplatesList.get(0).getBeerName().toString());
                                 updateBuilder.update();
 
 
                                 Toast.makeText(context, "Usunięto z ulubionych", Toast.LENGTH_SHORT).show();
-                                favoriteBeers.remove(dataSource.get(position));
+                                favoriteBeers.remove(beerDataBaseTemplatesList.get(0).getBeerName().toString());
 
 
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            Log.d("Favorite size= ", String.valueOf(favoriteBeers.size()));
+                            Log.d("FavoriteBeers size= ", String.valueOf(favoriteBeers.size()));
 
 
                         }
@@ -277,7 +271,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
 
     }
 
@@ -327,15 +320,10 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         public void onClick(View v) {
 
             Intent intent = new Intent(context, AboutBeerActivity.class);
-            intent.putExtra("imageBeer", HomeActivity.beerPhotoLargeUrlsList.get(getLayoutPosition()));
             intent.putExtra("nameBeer", nameBeerTextView.getText().toString());
-            intent.putExtra("abvBeer", HomeActivity.beerABVList.get(getAdapterPosition()));
-            intent.putExtra("descriptionBeer", HomeActivity.beerDescriptionList.get(getAdapterPosition()));
             context.startActivity(intent);
 
-
         }
-
 
     }
 }

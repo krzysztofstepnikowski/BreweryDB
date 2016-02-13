@@ -56,13 +56,6 @@ public class BeerDataBaseTemplate {
         this.webBeerID = webBeerID;
     }
 
-    public BeerDataBaseTemplate(String webBeerID) {
-        this.webBeerID = webBeerID;
-    }
-
-    public BeerDataBaseTemplate(boolean beerFav) {
-        this.beerFav = beerFav;
-    }
 
     public BeerDataBaseTemplate() {
     }

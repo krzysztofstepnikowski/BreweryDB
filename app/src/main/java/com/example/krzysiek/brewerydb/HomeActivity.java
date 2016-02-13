@@ -58,32 +58,12 @@ public class HomeActivity extends AppCompatActivity {
     /**
      * Lista przechowująca nazwy piw
      */
-    public static ArrayList<String> simpleBeerList = new ArrayList<String>();
-
-    /**
-     * Lista przechowująca zdjęcia piw o rozmiarze: medium
-     */
-    public static ArrayList beerPhotoMediumUrlsList = new ArrayList<>();
-
-    /**
-     * Lista przechowująca zdjęcia piw o rozmiarze: large
-     */
-    public static ArrayList<String> beerPhotoLargeUrlsList = new ArrayList<String>();
-
-    /**
-     * Lista przechowująca dane o objętości alkoholu w piwie
-     */
-    public static ArrayList<String> beerABVList = new ArrayList<String>();
-
-    /**
-     * Lista przechowująca opis szczegółowy piwa
-     */
-    public static ArrayList<String> beerDescriptionList = new ArrayList<String>();
+    public ArrayList<String> nameBeerList = new ArrayList<String>();
 
     /**
      * Lista przechowująca dane o piwach w trybie offline.
      */
-    public static ArrayList<String> offlineBeers = new ArrayList<String>();
+    public ArrayList<String> offlineBeers = new ArrayList<String>();
 
     /**
      * Zmienna statyczna BASE_API_URL
@@ -159,6 +139,7 @@ public class HomeActivity extends AppCompatActivity {
     /**
      * Metoda onCreate
      * Odpowiada za wszystkie akcje oraz tworzy wygląd Activity.
+     *
      * @param savedInstanceState
      */
     @Override
@@ -190,10 +171,7 @@ public class HomeActivity extends AppCompatActivity {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
-
         }
-
 
     }
 
@@ -204,14 +182,6 @@ public class HomeActivity extends AppCompatActivity {
      * @param beerName
      */
     public void fetchData(String beerName) {
-
-
-        //CardViewAdapter.favoriteBeers.clear();
-        beerDescriptionList.clear();
-        beerABVList.clear();
-        beerPhotoMediumUrlsList.clear();
-        beerPhotoLargeUrlsList.clear();
-        simpleBeerList.clear();
 
         progress = ProgressDialog.show(this, "Pobieranie danych...", "Proszę czekać...", true, false, null);
 
@@ -439,56 +409,19 @@ public class HomeActivity extends AppCompatActivity {
                     if (i.getName() != null) {
 
                         String beerName = i.getName().toString();
-                        simpleBeerList.add(beerName);
-
-                        if (i.getLabels() != null) {
-
-                            String url = i.getLabels().getMedium().toString();
-                            beerPhotoMediumUrlsList.add(url);
-                        } else {
-                            beerPhotoMediumUrlsList.add("Brak zdjęcia");
-                        }
-
-                        if (i.getLabels() != null) {
-                            String url = i.getLabels().getLarge().toString();
-                            beerPhotoLargeUrlsList.add(url);
-
-                        } else {
-                            beerPhotoLargeUrlsList.add("Brak zdjęcia");
-                        }
-
-                        if (i.getDescription() != null) {
-                            String description = i.getDescription().toString();
-                            beerDescriptionList.add(description);
-                        } else {
-                            beerDescriptionList.add("Brak danych");
-                        }
-
-                        if (i.getAbv() != null) {
-                            String abv = i.getAbv().toString();
-                            beerABVList.add(abv);
-                        } else {
-                            beerABVList.add("Brak danych");
-                        }
+                        nameBeerList.add(beerName);
 
                         mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        adapter2 = new CardViewAdapter(HomeActivity.this, simpleBeerList);
+                        adapter2 = new CardViewAdapter(HomeActivity.this, nameBeerList);
                         mRecyclerView.setAdapter(adapter2);
-
-                        Log.d("Adapter", String.valueOf(adapter2.getItemCount()));
-
-
                         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                             @Override
                             public void onRefresh() {
 
-                                if(simpleBeerList.size()>4) {
+                                if (nameBeerList.size() > 4) {
                                     refreshContent();
-                                }
-
-                                else
-                                {
+                                } else {
                                     mSwipeRefreshLayout.setRefreshing(false);
                                 }
                             }
@@ -498,9 +431,11 @@ public class HomeActivity extends AppCompatActivity {
                         progress.hide();
 
                     }
+
+
                 }
                 progress.hide();
-                Log.d("SimpleBeerList size: ", String.valueOf(simpleBeerList.size()));
+                Log.d("NameBeerList size: ", String.valueOf(nameBeerList.size()));
             }
 
             /**
@@ -521,9 +456,9 @@ public class HomeActivity extends AppCompatActivity {
     private List<String> getNewBeerData() {
         List<String> newBeerData = new ArrayList<>();
 
-        for (int i = 0; i < simpleBeerList.size(); i++) {
-            int randomBeerDataIndex = new Random().nextInt(simpleBeerList.size() - 1);
-            newBeerData.add(simpleBeerList.get(randomBeerDataIndex));
+        for (int i = 0; i < nameBeerList.size(); i++) {
+            int randomBeerDataIndex = new Random().nextInt(nameBeerList.size() - 1);
+            newBeerData.add(nameBeerList.get(randomBeerDataIndex));
         }
 
         return newBeerData;
@@ -573,7 +508,7 @@ public class HomeActivity extends AppCompatActivity {
                     if (internetAccess == true) {
                         mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        favoriteBeerAdapter = new CardViewAdapter(HomeActivity.this, simpleBeerList);
+                        favoriteBeerAdapter = new CardViewAdapter(HomeActivity.this, nameBeerList);
                         mRecyclerView.setAdapter(favoriteBeerAdapter);
                     } else {
                         mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
@@ -619,7 +554,7 @@ public class HomeActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int which) {
 
                     if (searchBeerEditText.getText().toString() != null) {
-                        simpleBeerList.clear();
+                        nameBeerList.clear();
                         fetchData(searchBeerEditText.getText().toString());
                     }
 
@@ -655,11 +590,7 @@ public class HomeActivity extends AppCompatActivity {
         mSwipeRefreshLayout.setEnabled(false);
 
         CardViewAdapter.favoriteBeers.clear();
-        simpleBeerList.clear();
-        beerPhotoMediumUrlsList.clear();
-        beerPhotoLargeUrlsList.clear();
-        beerABVList.clear();
-        beerDescriptionList.clear();
+        nameBeerList.clear();
 
 
         int size = 0;
@@ -667,22 +598,14 @@ public class HomeActivity extends AppCompatActivity {
             BeerDataBaseTemplate wdt = (BeerDataBaseTemplate) obj;
             Log.d("Imie piwa z bazy:", wdt.getBeerName().toString());
             String beer = wdt.getBeerName().toString();
-            String voltage = wdt.getBeerVoltage().toString();
-            String description = wdt.getBeerDescription().toString();
-            String beerImageMedium = wdt.getBeerImageMedium().toString();
-            String beerImageLarge = wdt.getBeerImageLarge();
+//            String voltage = wdt.getBeerVoltage().toString();
+//            String description = wdt.getBeerDescription().toString();
+//            String beerImageMedium = wdt.getBeerImageMedium().toString();
+//            String beerImageLarge = wdt.getBeerImageLarge();
             offlineBeers.add(beer);
             size = offlineBeers.size();
 
             Log.d("Rozmiar nowej: ", String.valueOf(size));
-
-
-            //JAK DODANE DO BAZY TO POBIERZ PRAWIDŁOWO
-
-            beerPhotoMediumUrlsList.add(beerImageMedium);
-            beerPhotoLargeUrlsList.add(beerImageLarge);
-            beerABVList.add(voltage);
-            beerDescriptionList.add(description);
 
         }
 
