@@ -1,14 +1,20 @@
 package com.example.krzysiek.brewerydb;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -284,6 +290,47 @@ public class AboutBeerActivity extends AppCompatActivity {
 
         Intent intent = new Intent(AboutBeerActivity.this, HomeActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_about, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if(id==R.id.aboutApp)
+        {
+
+            final SpannableString serviceUrlSpannableString = new SpannableString("http://www.brewerydb.com/");
+            final TextView textView = new TextView(this);
+            textView.setText("BreweryDB\nv1.0\n\nCopyright ⓒ 2016\nKrzysztof Stępnikowski\n\n" +
+                    "Aplikacja zawiera dane o piwach pobranych z serwisu " + serviceUrlSpannableString+ "\n\nWszelkie prawa zastrzeżone.");
+            textView.setAutoLinkMask(RESULT_OK);
+            textView.setMovementMethod(LinkMovementMethod.getInstance());
+
+            Linkify.addLinks(serviceUrlSpannableString, Linkify.WEB_URLS);
+            AlertDialog alertDialog = new AlertDialog.Builder(AboutBeerActivity.this)
+                    .setTitle("O programie")
+                    .setCancelable(false)
+                    .setIcon(R.drawable.icon_beer)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .setView(textView).show();
+            alertDialog.show();
+
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
 

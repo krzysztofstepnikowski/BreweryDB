@@ -18,4 +18,12 @@
         android:title="@string/search"
         android:visible="true"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/aboutApp"
+        android:title="@string/aboutapp"
+        android:visible="true"
+        android:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" />
+
 </menu>

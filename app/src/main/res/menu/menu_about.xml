@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.krzysiek.brewerydb.HomeActivity">
 
-
+    <item
+        android:id="@+id/aboutApp"
+        android:title="@string/aboutapp"
+        android:visible="true"
+        android:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" />
 
 </menu>

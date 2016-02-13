@@ -112,7 +112,8 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         QueryBuilder<BeerDataBaseTemplate, String> queryBuilder = studDao.queryBuilder();
 
         try {
-            final List<BeerDataBaseTemplate> beerDataBaseTemplatesList = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString()).query();
+            final List<BeerDataBaseTemplate> beerDataBaseTemplatesList = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME",
+                    dataSource.get(position).toString()).query();
 
             if (!beerDataBaseTemplatesList.isEmpty()) {
                 beerDataBaseTemplatesList.get(0).getBeerImageMedium();

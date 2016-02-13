@@ -36,7 +36,8 @@ public class BeerDataBaseTemplate {
     @DatabaseField(columnName = COLUMN_BEER_FAVORITE)
     private boolean beerFav;
 
-    public BeerDataBaseTemplate(int id, String beerName, String beerVoltage, String beerDescription, String beerImageMedium, String beerImageLarge, boolean beerFav) {
+    public BeerDataBaseTemplate(int id, String beerName, String beerVoltage, String beerDescription, String beerImageMedium,
+                                String beerImageLarge, boolean beerFav) {
         this.id = id;
         this.beerName = beerName;
         this.beerVoltage = beerVoltage;
@@ -46,7 +47,8 @@ public class BeerDataBaseTemplate {
         this.beerFav = beerFav;
     }
 
-    public BeerDataBaseTemplate(String beerName, String beerVoltage, String beerDescription, String beerImageMedium, String beerImageLarge, boolean beerFav, String webBeerID) {
+    public BeerDataBaseTemplate(String beerName, String beerVoltage, String beerDescription, String beerImageMedium,
+                                String beerImageLarge, boolean beerFav, String webBeerID) {
         this.beerName = beerName;
         this.beerVoltage = beerVoltage;
         this.beerDescription = beerDescription;

@@ -15,6 +15,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -226,10 +231,12 @@ public class HomeActivity extends AppCompatActivity {
                             /**
                              * Lista zawiera wszystkie dane piwa dla danego BEER_ID.
                              */
-                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_ID", i.getId().toString()).query();
+                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_ID",
+                                    i.getId().toString()).query();
                             if (!beerList.isEmpty()) {
                                 findRecord = true;
-                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" + i.getId().toString());
+                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:"
+                                        + i.getId().toString());
                             }
 
                             /**
@@ -268,10 +275,12 @@ public class HomeActivity extends AppCompatActivity {
                             /**
                              * Lista zawiera wszystkie dane piwa dla danego BEER_ID.
                              */
-                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_ID", i.getId().toString()).query();
+                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_ID",
+                                    i.getId().toString()).query();
                             if (!beerList.isEmpty()) {
                                 findRecord = true;
-                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" + i.getId().toString());
+                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:"
+                                        + i.getId().toString());
                             }
 
                             /**
@@ -288,8 +297,8 @@ public class HomeActivity extends AppCompatActivity {
                              * W przeciwnym wypadku obiekt jest dodawany do bazy.
                              */
                             else {
-                                studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), i.getAbv(), "Brak danych", i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(),
-                                        false, i.getId()));
+                                studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), i.getAbv(), "Brak danych",
+                                        i.getLabels().getMedium().toString(), i.getLabels().getLarge().toString(), false, i.getId()));
                             }
 
 
@@ -305,10 +314,12 @@ public class HomeActivity extends AppCompatActivity {
                             /**
                              * Lista zawiera wszystkie dane piwa dla danego BEER_ID.
                              */
-                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_ID", i.getId().toString()).query();
+                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_ID",
+                                    i.getId().toString()).query();
                             if (!beerList.isEmpty()) {
                                 findRecord = true;
-                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" + i.getId().toString());
+                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:"
+                                        + i.getId().toString());
                             }
 
                             /**
@@ -341,10 +352,12 @@ public class HomeActivity extends AppCompatActivity {
                             /**
                              * Lista zawiera wszystkie dane piwa dla danego BEER_ID.
                              */
-                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_ID", i.getId().toString()).query();
+                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_ID",
+                                    i.getId().toString()).query();
                             if (!beerList.isEmpty()) {
                                 findRecord = true;
-                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" + i.getId().toString());
+                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:"
+                                        + i.getId().toString());
                             }
 
                             /**
@@ -352,16 +365,16 @@ public class HomeActivity extends AppCompatActivity {
                              * Jeśli rekord znajduje się już w bazie, jest on aktualizowany w bazie.
                              */
                             if (findRecord) {
-                                studDao.update(new BeerDataBaseTemplate("" + i.getName(), "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false
-                                        , i.getId()));
+                                studDao.update(new BeerDataBaseTemplate("" + i.getName(), "Brak danych", "Brak danych", "Brak zdjęcia",
+                                        "Brak zdjęcia", false, i.getId()));
                             }
 
                             /**
                              * W przeciwnym wypadku obiekt jest dodawany do bazy.
                              */
                             else {
-                                studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false
-                                        , i.getId()));
+                                studDao.createOrUpdate(new BeerDataBaseTemplate("" + i.getName(), "Brak danych", "Brak danych", "Brak zdjęcia",
+                                        "Brak zdjęcia", false, i.getId()));
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
@@ -375,10 +388,12 @@ public class HomeActivity extends AppCompatActivity {
                             /**
                              * Lista zawiera wszystkie dane piwa dla danego BEER_ID.
                              */
-                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_ID", i.getId().toString()).query();
+                            List<BeerDataBaseTemplate> beerList = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_ID",
+                                    i.getId().toString()).query();
                             if (!beerList.isEmpty()) {
                                 findRecord = true;
-                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:" + i.getId().toString());
+                                Log.d(HomeActivity.class.getName(), "Znaleziono ID w bazie lokalnej przy pobieraniu z webservicu!, id:"
+                                        + i.getId().toString());
                             }
 
                             /**
@@ -386,16 +401,16 @@ public class HomeActivity extends AppCompatActivity {
                              * Jeśli rekord znajduje się już w bazie, jest on aktualizowany w bazie.
                              */
                             if (findRecord) {
-                                studDao.update(new BeerDataBaseTemplate("Brak danych", "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false
-                                        , i.getId()));
+                                studDao.update(new BeerDataBaseTemplate("Brak danych", "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia",
+                                        false, i.getId()));
                             }
 
                             /**
                              * W przeciwnym wypadku obiekt jest dodawany do bazy.
                              */
                             else {
-                                studDao.createOrUpdate(new BeerDataBaseTemplate("Brak danych", "Brak danych", "Brak danych", "Brak zdjęcia", "Brak zdjęcia", false
-                                        , i.getId()));
+                                studDao.createOrUpdate(new BeerDataBaseTemplate("Brak danych", "Brak danych", "Brak danych", "Brak zdjęcia",
+                                        "Brak zdjęcia", false, i.getId()));
                             }
 
                         } catch (SQLException e) {
@@ -574,6 +589,30 @@ public class HomeActivity extends AppCompatActivity {
 
         }
 
+        if (id == R.id.aboutApp) {
+
+            final SpannableString serviceUrlSpannableString = new SpannableString("http://www.brewerydb.com/");
+            final TextView textView = new TextView(this);
+            textView.setText("BreweryDB\nv1.0\n\nCopyright ⓒ 2016\nKrzysztof Stępnikowski\n\n" +
+                    "Aplikacja zawiera dane o piwach pobranych z serwisu " + serviceUrlSpannableString + "\n\nWszelkie prawa zastrzeżone.");
+            textView.setAutoLinkMask(RESULT_OK);
+            textView.setMovementMethod(LinkMovementMethod.getInstance());
+
+            Linkify.addLinks(serviceUrlSpannableString, Linkify.WEB_URLS);
+            AlertDialog alertDialog = new AlertDialog.Builder(HomeActivity.this)
+                    .setTitle("O programie")
+                    .setCancelable(false)
+                    .setIcon(R.drawable.icon_beer)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .setView(textView).show();
+            alertDialog.show();
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -598,10 +637,6 @@ public class HomeActivity extends AppCompatActivity {
             BeerDataBaseTemplate wdt = (BeerDataBaseTemplate) obj;
             Log.d("Imie piwa z bazy:", wdt.getBeerName().toString());
             String beer = wdt.getBeerName().toString();
-//            String voltage = wdt.getBeerVoltage().toString();
-//            String description = wdt.getBeerDescription().toString();
-//            String beerImageMedium = wdt.getBeerImageMedium().toString();
-//            String beerImageLarge = wdt.getBeerImageLarge();
             offlineBeers.add(beer);
             size = offlineBeers.size();
 
