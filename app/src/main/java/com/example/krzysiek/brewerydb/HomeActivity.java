@@ -156,6 +156,11 @@ public class HomeActivity extends AppCompatActivity {
     boolean internetAccess = false;
 
 
+    /**
+     * Metoda onCreate
+     * Odpowiada za wszystkie akcje oraz tworzy wygląd Activity.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -239,7 +244,7 @@ public class HomeActivity extends AppCompatActivity {
                  * Duplikowanie danych spełnione.
                  * Jeśli obiekt znajduje się w bazie, jest on aktualizowany, wpp. jest dodawany do bazy.
                  *
-                 * Piwa charakteryzują się tym, że nie każde posiada zdjęcie oraz danych, np. o: objętości alkoholu oraz opisu,
+                 * Piwa charakteryzują się tym, że nie każde posiada zdjęcie oraz dane, np. o: objętości alkoholu oraz opisu,
                  * stąd zaimplementowano każdy przypadek, aby uniknąć przy kompilacji uzyskania błędów typu "NullPointer".
                  *
                  */
@@ -720,6 +725,10 @@ public class HomeActivity extends AppCompatActivity {
         return false;
     }
 
+    /**
+     * Metoda refreshContent
+     * Odpowiada za prawidłowy mechanizm "Pull to refresh".
+     */
     private void refreshContent() {
         new Handler().postDelayed(new Runnable() {
             @Override

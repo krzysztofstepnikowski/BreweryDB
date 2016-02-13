@@ -220,6 +220,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
                             Log.d("Favorite size= ", String.valueOf(favoriteBeers.size()));
                         } else {
+
                             buttonView.setBackgroundResource(R.color.colorPrimaryDark);
                             holder.addToFavouriteToggleButton.setTextOff("Dodaj do ulubionych");
 
