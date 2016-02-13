@@ -292,6 +292,14 @@ public class AboutBeerActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent intent = new Intent(AboutBeerActivity.this,HomeActivity.class);
+        startActivity(intent);
+    }
 }
 
 

@@ -210,7 +210,7 @@ public class HomeActivity extends AppCompatActivity {
 
         progress = ProgressDialog.show(this, "Pobieranie danych...", "Proszę czekać...", true, false, null);
 
-        RestAdapter adapter = new RestAdapter.Builder().setEndpoint(BASE_API_URL)
+        final RestAdapter adapter = new RestAdapter.Builder().setEndpoint(BASE_API_URL)
                 .setLogLevel(RestAdapter.LogLevel.FULL).build();
         ApiInterface breweryRestInterface = adapter.create(ApiInterface.class);
 
@@ -471,15 +471,25 @@ public class HomeActivity extends AppCompatActivity {
                         adapter2 = new CardViewAdapter(HomeActivity.this, simpleBeerList);
                         mRecyclerView.setAdapter(adapter2);
 
-                        if (simpleBeerList.size() > 0) {
-                            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                                @Override
-                                public void onRefresh() {
-                                    mSwipeRefreshLayout.setRefreshing(true);
+                        Log.d("Adapter", String.valueOf(adapter2.getItemCount()));
+
+
+                        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                            @Override
+                            public void onRefresh() {
+
+                                if(simpleBeerList.size()>4) {
                                     refreshContent();
                                 }
-                            });
-                        }
+
+                                else
+                                {
+                                    mSwipeRefreshLayout.setRefreshing(false);
+                                }
+                            }
+                        });
+
+
                         progress.hide();
 
                     }
@@ -718,8 +728,9 @@ public class HomeActivity extends AppCompatActivity {
 
                 adapter2 = new CardViewAdapter(context, (ArrayList<String>) getNewBeerData());
                 mRecyclerView.setAdapter(adapter2);
-                mSwipeRefreshLayout.setRefreshing(false);
+                mSwipeRefreshLayout.setRefreshing(true);
             }
+
         }, 2000);
     }
 
