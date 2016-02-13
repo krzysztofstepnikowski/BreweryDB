@@ -2,7 +2,6 @@ package com.example.krzysiek.brewerydb;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,7 +15,6 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 
-import com.example.krzysiek.brewerydb.models.Datum;
 import com.example.krzysiek.brewerydb.ormlite.BeerDataBaseTemplate;
 import com.example.krzysiek.brewerydb.ormlite.DatabaseHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -28,11 +26,7 @@ import com.squareup.picasso.Picasso;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import retrofit.http.Query;
 
 /**
  * @author Krzysztof Stępnikowski
@@ -70,10 +64,18 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         this.dataSource = dataSource;
     }
 
+    /**
+     * Zmienna dbHelper
+     * Obiekt klasy DatabaseHelper
+     * Odpowiada za połączenie z lokalną bazą danych.
+     */
     private DatabaseHelper dbHelper;
 
+    /**
+     * Zmienna isBeerLikeFavorite typu boolean.
+     */
     boolean isBeerLikeFavorite = false;
-    boolean isNotBeerLikeFavorite = false;
+
 
     /**
      * Metoda onCreateViewHolder typu BrewerViewHolder
@@ -104,23 +106,12 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
     @Override
     public void onBindViewHolder(final BreweryViewHolder holder, final int position) {
 
-        holder.nameBeerTextView.setText(dataSource.get(position).toString());
-        holder.imageViewBeer.setImageResource(R.drawable.icon_beer);
-        final String urlMedium = HomeActivity.beerPhotoMediumUrlsList.get(position);
-        final Context contextImage = holder.imageViewBeer.getContext();
-        Picasso.with(contextImage)
-                .load(urlMedium)
-                .placeholder(R.drawable.icon_beer)
-                .error(R.drawable.icon_beer)
-                .into(holder.imageViewBeer);
 
         dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(context, DatabaseHelper.class);
         final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
         QueryBuilder<BeerDataBaseTemplate, String> queryBuilder = studDao.queryBuilder();
         try {
             List<BeerDataBaseTemplate> beerLikeListFavorites = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", true).and()
-                    .eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString()).query();
-            List<BeerDataBaseTemplate> beerNotLikeListFavorites = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", false).and()
                     .eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", dataSource.get(position).toString()).query();
 
 
@@ -129,13 +120,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
             } else {
                 isBeerLikeFavorite = false;
             }
-
-            if (!beerNotLikeListFavorites.isEmpty()) {
-                isNotBeerLikeFavorite = true;
-            } else {
-                isNotBeerLikeFavorite = false;
-            }
-
 
             if (isBeerLikeFavorite == true) {
 
@@ -149,6 +133,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                         if (buttonView.isChecked()) {
                             buttonView.setBackgroundResource(R.color.colorPrimaryDark);
                             holder.addToFavouriteToggleButton.setTextOn("Dodaj do ulubionych");
+
 
                             UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
                             try {
@@ -168,6 +153,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                         } else {
                             buttonView.setBackgroundResource(R.color.addToFavouriteButton);
                             holder.addToFavouriteToggleButton.setTextOff("Usuń z ulubionych");
+
 
                             UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
 
@@ -262,10 +248,22 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
             }
 
 
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        holder.nameBeerTextView.setText(dataSource.get(position).toString());
+        holder.imageViewBeer.setImageResource(R.drawable.icon_beer);
+
+        String urlImageBeerMedium = HomeActivity.beerPhotoMediumUrlsList.get(position).toString();
+        Log.d("Position", String.valueOf(urlImageBeerMedium));
+        Context contextImage = holder.imageViewBeer.getContext();
+        Picasso.with(contextImage)
+                .load(urlImageBeerMedium)
+                .placeholder(R.drawable.icon_beer)
+                .error(R.drawable.icon_beer)
+                .into(holder.imageViewBeer);
+
 
     }
 
@@ -277,7 +275,6 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
      */
     @Override
     public int getItemCount() {
-        Log.d("Rozmiar listy: ", String.valueOf(dataSource.size()));
 
         return dataSource.size();
     }
@@ -316,7 +313,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         public void onClick(View v) {
 
             Intent intent = new Intent(context, AboutBeerActivity.class);
-            intent.putExtra("imageBeer", HomeActivity.beerPhotoLargeUrlsList.get(getAdapterPosition()));
+            intent.putExtra("imageBeer", HomeActivity.beerPhotoLargeUrlsList.get(getLayoutPosition()));
             intent.putExtra("nameBeer", nameBeerTextView.getText().toString());
             intent.putExtra("abvBeer", HomeActivity.beerABVList.get(getAdapterPosition()));
             intent.putExtra("descriptionBeer", HomeActivity.beerDescriptionList.get(getAdapterPosition()));

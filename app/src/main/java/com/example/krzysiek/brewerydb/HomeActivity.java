@@ -58,12 +58,12 @@ public class HomeActivity extends AppCompatActivity {
     /**
      * Lista przechowująca nazwy piw
      */
-    private ArrayList<String> simpleBeerList = new ArrayList<String>();
+    public static ArrayList<String> simpleBeerList = new ArrayList<String>();
 
     /**
      * Lista przechowująca zdjęcia piw o rozmiarze: medium
      */
-    public static ArrayList<String> beerPhotoMediumUrlsList = new ArrayList<String>();
+    public static ArrayList beerPhotoMediumUrlsList = new ArrayList<>();
 
     /**
      * Lista przechowująca zdjęcia piw o rozmiarze: large
@@ -83,7 +83,7 @@ public class HomeActivity extends AppCompatActivity {
     /**
      * Lista przechowująca dane o piwach w trybie offline.
      */
-    ArrayList<String> offlineBeers = new ArrayList<String>();
+    public static ArrayList<String> offlineBeers = new ArrayList<String>();
 
     /**
      * Zmienna statyczna BASE_API_URL
@@ -168,11 +168,13 @@ public class HomeActivity extends AppCompatActivity {
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeLayout);
 
+
         /**
          * Sprawdzenie czy urządzenie mobilne posiada dostęp do Internetu
          */
         if (internetAccess == true) {
             Toast.makeText(getApplicationContext(), "Wykryto dostęp do Internetu", Toast.LENGTH_LONG).show();
+
             fetchData("Zywiec");
         } else if (internetAccess == false) {
 
@@ -198,11 +200,14 @@ public class HomeActivity extends AppCompatActivity {
      */
     public void fetchData(String beerName) {
 
-        CardViewAdapter.favoriteBeers.clear();
+
+        //CardViewAdapter.favoriteBeers.clear();
         beerDescriptionList.clear();
         beerABVList.clear();
         beerPhotoMediumUrlsList.clear();
         beerPhotoLargeUrlsList.clear();
+        simpleBeerList.clear();
+
         progress = ProgressDialog.show(this, "Pobieranie danych...", "Proszę czekać...", true, false, null);
 
         RestAdapter adapter = new RestAdapter.Builder().setEndpoint(BASE_API_URL)
@@ -520,6 +525,7 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_home, menu);
 
+
         if (internetAccess == true) {
             menu.findItem(R.id.searchBeerMenuItem).setVisible(true);
         } else {
@@ -528,10 +534,12 @@ public class HomeActivity extends AppCompatActivity {
 
         }
 
+
         favoriteBeerToggleButton = (ToggleButton) menu.findItem(R.id.favouriteBeersMenuItem).getActionView().findViewById(R.id.switch_show_protected);
         favoriteBeerToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
 
                 if (favoriteBeerToggleButton.isChecked()) {
 
@@ -539,8 +547,8 @@ public class HomeActivity extends AppCompatActivity {
 
                         mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        adapter2 = new CardViewAdapter(HomeActivity.this, CardViewAdapter.favoriteBeers);
-                        mRecyclerView.setAdapter(adapter2);
+                        favoriteBeerAdapter = new CardViewAdapter(HomeActivity.this, CardViewAdapter.favoriteBeers);
+                        mRecyclerView.setAdapter(favoriteBeerAdapter);
                     } else {
                         Toast.makeText(context, "Brak ulubionych piw", Toast.LENGTH_SHORT).show();
                     }
@@ -550,12 +558,14 @@ public class HomeActivity extends AppCompatActivity {
                     if (internetAccess == true) {
                         mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        adapter2 = new CardViewAdapter(HomeActivity.this, simpleBeerList);
-                        mRecyclerView.setAdapter(adapter2);
+                        favoriteBeerAdapter = new CardViewAdapter(HomeActivity.this, simpleBeerList);
+                        mRecyclerView.setAdapter(favoriteBeerAdapter);
+                        mRecyclerView.invalidate();
                     } else {
                         mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
                         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         favoriteBeerAdapter = new CardViewAdapter(HomeActivity.this, offlineBeers);
+
                         mRecyclerView.setAdapter(favoriteBeerAdapter);
                     }
 
@@ -630,10 +640,13 @@ public class HomeActivity extends AppCompatActivity {
         final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
         mSwipeRefreshLayout.setEnabled(false);
 
-        beerDescriptionList.clear();
-        beerABVList.clear();
+        CardViewAdapter.favoriteBeers.clear();
+        simpleBeerList.clear();
         beerPhotoMediumUrlsList.clear();
         beerPhotoLargeUrlsList.clear();
+        beerABVList.clear();
+        beerDescriptionList.clear();
+
 
         int size = 0;
         for (Object obj : studDao.queryForAll()) {
@@ -643,7 +656,7 @@ public class HomeActivity extends AppCompatActivity {
             String voltage = wdt.getBeerVoltage().toString();
             String description = wdt.getBeerDescription().toString();
             String beerImageMedium = wdt.getBeerImageMedium().toString();
-            String beerImageLarge = wdt.getBeerImageLarge().toString();
+            String beerImageLarge = wdt.getBeerImageLarge();
             offlineBeers.add(beer);
             size = offlineBeers.size();
 
@@ -671,8 +684,8 @@ public class HomeActivity extends AppCompatActivity {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        favoriteBeerAdapter = new CardViewAdapter(HomeActivity.this, offlineBeers);
-        mRecyclerView.setAdapter(favoriteBeerAdapter);
+        adapter2 = new CardViewAdapter(HomeActivity.this, offlineBeers);
+        mRecyclerView.setAdapter(adapter2);
     }
 
     /**
