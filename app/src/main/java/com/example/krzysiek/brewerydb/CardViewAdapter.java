@@ -64,6 +64,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
         this.dataSource = dataSource;
     }
 
+
     /**
      * Zmienna dbHelper
      * Obiekt klasy DatabaseHelper
@@ -151,6 +152,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
                         if (buttonView.isChecked()) {
+
                             buttonView.setBackgroundResource(R.color.colorPrimaryDark);
                             holder.addToFavouriteToggleButton.setTextOn("Dodaj do ulubionych");
 
@@ -164,6 +166,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
                                 Toast.makeText(context, "Usunięto z ulubionych", Toast.LENGTH_SHORT).show();
                                 favoriteBeers.remove(beerDataBaseTemplatesList.get(0).getBeerName().toString());
+                                notifyItemRemoved(getItemViewType(position));
 
 
                             } catch (SQLException e) {
@@ -190,6 +193,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                                     favoriteBeers.add(beerDataBaseTemplatesList.get(0).getBeerName().toString());
                                 } else {
                                     favoriteBeers.add("Brak danych");
+
                                 }
 
 
@@ -307,6 +311,13 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
             nameBeerTextView = (TextView) itemView.findViewById(R.id.nameBeerTextView);
             imageViewBeer = (ImageView) itemView.findViewById(R.id.imageViewBeer);
             addToFavouriteToggleButton = (ToggleButton) itemView.findViewById(R.id.addToFavouriteButton);
+            addToFavouriteToggleButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                }
+            });
         }
 
 
