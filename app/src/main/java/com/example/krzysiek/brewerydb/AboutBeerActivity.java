@@ -31,6 +31,7 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -122,16 +123,18 @@ public class AboutBeerActivity extends AppCompatActivity {
 
             final List<BeerDataBaseTemplate> list = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_NAME", nameBeer).query();
 
+
             if (!list.isEmpty()) {
                 Log.d("Lista", list.get(0).getBeerName());
-            }
 
+            }
 
             imageViewBeerDetails = (ImageView) findViewById(R.id.imageViewBeerDetails);
             Picasso.with(this)
                     .load(list.get(0).getBeerImageLarge().toString())
                     .placeholder(R.drawable.icon_beer)
                     .into(imageViewBeerDetails);
+
 
             Log.d("ImageViewBeerDetails position: ", list.get(0).getBeerImageLarge());
 
@@ -303,13 +306,12 @@ public class AboutBeerActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
-        if(id==R.id.aboutApp)
-        {
+        if (id == R.id.aboutApp) {
 
             final SpannableString serviceUrlSpannableString = new SpannableString("http://www.brewerydb.com/");
             final TextView textView = new TextView(this);
             textView.setText("BreweryDB\nv1.0\n\nCopyright ⓒ 2016\nKrzysztof Stępnikowski\n\n" +
-                    "Aplikacja zawiera dane o piwach pobranych z serwisu " + serviceUrlSpannableString+ "\n\nWszelkie prawa zastrzeżone.");
+                    "Aplikacja zawiera dane o piwach pobranych z serwisu " + serviceUrlSpannableString + "\n\nWszelkie prawa zastrzeżone.");
             textView.setAutoLinkMask(RESULT_OK);
             textView.setMovementMethod(LinkMovementMethod.getInstance());
 

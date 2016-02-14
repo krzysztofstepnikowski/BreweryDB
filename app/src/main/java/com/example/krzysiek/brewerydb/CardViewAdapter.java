@@ -142,10 +142,11 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                 isBeerLikeFavorite = false;
             }
 
-            if (isBeerLikeFavorite == true) {
+            if (isBeerLikeFavorite) {
 
                 holder.addToFavouriteToggleButton.setBackgroundResource(R.color.addToFavouriteButton);
                 holder.addToFavouriteToggleButton.setText("Usuń z ulubionych");
+
 
                 holder.addToFavouriteToggleButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -157,6 +158,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                             holder.addToFavouriteToggleButton.setTextOn("Dodaj do ulubionych");
 
 
+
                             UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
                             try {
                                 updateBuilder.updateColumnValue("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", false);
@@ -165,17 +167,17 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
 
                                 Toast.makeText(context, "Usunięto z ulubionych", Toast.LENGTH_SHORT).show();
-                                favoriteBeers.remove(beerDataBaseTemplatesList.get(0).getBeerName().toString());
-                                notifyItemRemoved(getItemViewType(position));
+                                favoriteBeers.remove(dataSource.get(position).toString());
 
 
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            Log.d("Favorite size= ", String.valueOf(favoriteBeers.size()));
+
                         } else {
                             buttonView.setBackgroundResource(R.color.addToFavouriteButton);
                             holder.addToFavouriteToggleButton.setTextOff("Usuń z ulubionych");
+
 
 
                             UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
@@ -189,8 +191,8 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                                 Toast.makeText(context, "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
 
 
-                                if (beerDataBaseTemplatesList.get(0).getBeerName().toString() != null) {
-                                    favoriteBeers.add(beerDataBaseTemplatesList.get(0).getBeerName().toString());
+                                if (dataSource.get(position).toString() != null) {
+                                    favoriteBeers.add(dataSource.get(position).toString());
                                 } else {
                                     favoriteBeers.add("Brak danych");
 
@@ -201,7 +203,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                                 e.printStackTrace();
                             }
 
-                            Log.d("Favorite size= ", String.valueOf(favoriteBeers.size()));
+
                         }
                     }
 
@@ -220,6 +222,7 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                             buttonView.setBackgroundResource(R.color.addToFavouriteButton);
                             holder.addToFavouriteToggleButton.setTextOn("Usuń z ulubionych");
 
+
                             UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
 
                             try {
@@ -231,8 +234,8 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                                 Toast.makeText(context, "Dodano do ulubionych", Toast.LENGTH_SHORT).show();
 
 
-                                if (beerDataBaseTemplatesList.get(0).getBeerName().toString() != null) {
-                                    favoriteBeers.add(beerDataBaseTemplatesList.get(0).getBeerName().toString());
+                                if (dataSource.get(position).toString() != null) {
+                                    favoriteBeers.add(dataSource.get(position).toString());
                                 } else {
                                     favoriteBeers.add("Brak danych");
                                 }
@@ -242,11 +245,12 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
                                 e.printStackTrace();
                             }
 
-                            Log.d("Favorite size= ", String.valueOf(favoriteBeers.size()));
+
                         } else {
 
                             buttonView.setBackgroundResource(R.color.colorPrimaryDark);
                             holder.addToFavouriteToggleButton.setTextOff("Dodaj do ulubionych");
+
 
                             UpdateBuilder<BeerDataBaseTemplate, String> updateBuilder = studDao.updateBuilder();
                             try {
@@ -256,13 +260,12 @@ public class CardViewAdapter extends RecyclerView.Adapter<CardViewAdapter.Brewer
 
 
                                 Toast.makeText(context, "Usunięto z ulubionych", Toast.LENGTH_SHORT).show();
-                                favoriteBeers.remove(beerDataBaseTemplatesList.get(0).getBeerName().toString());
+                                favoriteBeers.remove(dataSource.get(position).toString());
 
 
                             } catch (SQLException e) {
                                 e.printStackTrace();
                             }
-                            Log.d("FavoriteBeers size= ", String.valueOf(favoriteBeers.size()));
 
 
                         }

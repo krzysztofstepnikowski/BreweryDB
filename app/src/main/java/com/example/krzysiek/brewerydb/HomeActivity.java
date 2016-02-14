@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 
@@ -158,6 +159,7 @@ public class HomeActivity extends AppCompatActivity {
 
         getSupportActionBar().setIcon(R.mipmap.ic_launcher);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeLayout);
+        searchBeerEditText = (EditText)findViewById(R.id.searchBeerEditText);
 
 
         /**
@@ -165,8 +167,10 @@ public class HomeActivity extends AppCompatActivity {
          */
         if (internetAccess == true) {
             Toast.makeText(getApplicationContext(), "Wykryto dostęp do Internetu", Toast.LENGTH_LONG).show();
+            SharedPreferences preferences = getSharedPreferences("myPref",MODE_PRIVATE);
+            String rememberBeerName = preferences.getString("rememberNameBeer","Zywiec");
+            fetchData(rememberBeerName);
 
-            fetchData("Zywiec");
         } else if (internetAccess == false) {
 
             Toast.makeText(getApplicationContext(), "Brak dostępu do Internetu.\nPraca w trybie offline", Toast.LENGTH_LONG).show();
@@ -507,16 +511,34 @@ public class HomeActivity extends AppCompatActivity {
 
 
                 if (favoriteBeerToggleButton.isChecked()) {
+                    dbHelper = (DatabaseHelper) OpenHelperManager.getHelper(context, DatabaseHelper.class);
+                    final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
+                    QueryBuilder<BeerDataBaseTemplate, String> queryBuilder = studDao.queryBuilder();
+                    try {
+                        List<BeerDataBaseTemplate> beerLikeListFavorites = queryBuilder.where().eq("BEERDATABASETEMPLATE_TABLE_BEER_FAVORITE", true).query();
 
-                    if (!CardViewAdapter.favoriteBeers.isEmpty()) {
+                        if (!beerLikeListFavorites.isEmpty()) {
 
-                        mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
-                        mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        favoriteBeerAdapter = new CardViewAdapter(HomeActivity.this, CardViewAdapter.favoriteBeers);
-                        mRecyclerView.setAdapter(favoriteBeerAdapter);
-                    } else {
-                        Toast.makeText(context, "Brak ulubionych piw", Toast.LENGTH_SHORT).show();
+                            ArrayList<String> favoriteBeers = new ArrayList<String>();
+
+
+                            for (int i = 0; i < beerLikeListFavorites.size(); i++) {
+                                favoriteBeers.add(beerLikeListFavorites.get(i).getBeerName());
+
+                            }
+
+                            mRecyclerView = (RecyclerView) findViewById(R.id.cardList);
+                            mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                            favoriteBeerAdapter = new CardViewAdapter(HomeActivity.this, favoriteBeers);
+                            mRecyclerView.setAdapter(favoriteBeerAdapter);
+                        } else {
+                            Toast.makeText(context, "Brak ulubionych piw", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
+
 
                 } else {
 
@@ -561,7 +583,7 @@ public class HomeActivity extends AppCompatActivity {
             final AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
             builder.setView(searchDialog);
 
-            searchBeerEditText = (EditText) searchDialog.findViewById(R.id.searchBeerEditText);
+            searchBeerEditText = (EditText)searchDialog.findViewById(R.id.searchBeerEditText);
 
             builder.setTitle("Wyszukaj piwo");
             builder.setPositiveButton("Szukaj", new DialogInterface.OnClickListener() {
@@ -571,10 +593,19 @@ public class HomeActivity extends AppCompatActivity {
                     if (searchBeerEditText.getText().toString() != null) {
                         nameBeerList.clear();
                         fetchData(searchBeerEditText.getText().toString());
+                        SharedPreferences pref = getSharedPreferences("myPref", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = pref.edit();
+                        editor.putString("rememberNameBeer", searchBeerEditText.getText().toString());
+                        editor.commit();
                     }
+
+
+
 
                 }
             });
+
+
 
             builder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
                 @Override
@@ -628,9 +659,6 @@ public class HomeActivity extends AppCompatActivity {
         final RuntimeExceptionDao studDao = dbHelper.getStudRuntimeExceptionDao();
         mSwipeRefreshLayout.setEnabled(false);
 
-        CardViewAdapter.favoriteBeers.clear();
-        nameBeerList.clear();
-
 
         int size = 0;
         for (Object obj : studDao.queryForAll()) {
@@ -658,6 +686,7 @@ public class HomeActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         adapter2 = new CardViewAdapter(HomeActivity.this, offlineBeers);
         mRecyclerView.setAdapter(adapter2);
+
     }
 
     /**
