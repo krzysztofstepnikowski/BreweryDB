@@ -306,7 +306,7 @@ public class AboutBeerActivity extends AppCompatActivity {
 
             final SpannableString serviceUrlSpannableString = new SpannableString("http://www.brewerydb.com/");
             final TextView textView = new TextView(this);
-            textView.setText("BreweryDB\nv1.0\n\nCopyright ⓒ 2016\nKrzysztof Stępnikowski\n\n" +
+            textView.setText("BreweryDB\nVersion 1.0\n\nCopyright ⓒ 2016\nKrzysztof Stępnikowski\n\n" +
                     "Aplikacja zawiera dane o piwach pobranych z serwisu " + serviceUrlSpannableString + "\n\nWszelkie prawa zastrzeżone.");
             textView.setAutoLinkMask(RESULT_OK);
             textView.setMovementMethod(LinkMovementMethod.getInstance());
