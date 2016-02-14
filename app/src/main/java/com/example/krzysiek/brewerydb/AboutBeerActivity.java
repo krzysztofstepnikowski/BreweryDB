@@ -31,7 +31,6 @@ import com.j256.ormlite.stmt.UpdateBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,7 +52,7 @@ public class AboutBeerActivity extends AppCompatActivity {
      * Obiekt klasy TextView
      * Wyświetla zawartość objętości alkoholu w piwie
      */
-    private TextView abvBeerTextViewDetails;
+    private TextView voltageBeerTextViewDetails;
 
     /**
      * Zmienna descriptionBeerTextViewDetails
@@ -136,15 +135,12 @@ public class AboutBeerActivity extends AppCompatActivity {
                     .into(imageViewBeerDetails);
 
 
-            Log.d("ImageViewBeerDetails position: ", list.get(0).getBeerImageLarge());
-
-
-            abvBeerTextViewDetails = (TextView) findViewById(R.id.abvBeerTextViewDeitals);
+            voltageBeerTextViewDetails = (TextView) findViewById(R.id.abvBeerTextViewDeitals);
 
             if (!list.get(0).getBeerVoltage().equals("Brak danych")) {
-                abvBeerTextViewDetails.setText(list.get(0).getBeerVoltage() + "%");
+                voltageBeerTextViewDetails.setText(list.get(0).getBeerVoltage() + "%");
             } else {
-                abvBeerTextViewDetails.setText(list.get(0).getBeerVoltage());
+                voltageBeerTextViewDetails.setText(list.get(0).getBeerVoltage());
             }
 
             descriptionBeerTextViewDetails = (TextView) findViewById(R.id.descriptionBeerDetailsTextView);
